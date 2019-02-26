@@ -3,7 +3,6 @@
                     beta1: 0.5                           
           checkpoints_dir: ./checkpoints                 
            continue_train: False                         
-                crop_size: 256                           
                  dataroot: ./datasets/day2night          	[default: None]
              dataset_mode: unaligned                     
                 direction: AtoB                          
@@ -17,7 +16,7 @@
                     epoch: latest                        
               epoch_count: 1                             
                  gan_mode: lsgan                         
-                  gpu_ids: -1                            
+                  gpu_ids: 1                             
                 init_gain: 0.02                          
                 init_type: normal                        
                  input_nc: 3                             
@@ -26,7 +25,7 @@
                  lambda_B: 10.0                          
           lambda_identity: 0.5                           
                 load_iter: 0                             	[default: 0]
-                load_size: 286                           
+                load_size: 320                           
                        lr: 0.0002                        
            lr_decay_iters: 50                            
                 lr_policy: linear                        
@@ -48,7 +47,7 @@
                 output_nc: 3                             
                     phase: train                         
                 pool_size: 50                            
-               preprocess: resize_and_crop               
+               preprocess: scale_width                   
                print_freq: 100                           
              save_by_iter: False                         
           save_epoch_freq: 5                             
