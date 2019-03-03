@@ -1,0 +1,15 @@
+Date and time: 2019-03-03 21-11-08
+
+Datasets used: ['/home/kenny/Desktop/CycleGANToD/datasets/day2night_inno/trainA']
+
+237
+237
+Image dtype:uint8
+Label dtype:uint8
+
+Image dtype:uint8
+Label dtype:uint8
+
+Image dtype:uint8
+Label dtype:uint8
+
