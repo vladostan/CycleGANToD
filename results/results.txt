@@ -1,0 +1,21 @@
+1. LinkNet trained for 447 day images 
+weights  "/home/kenny/Desktop/CycleGANToD/weights/segmentation/2019-03-03 22-00-24.hdf5"
+BARE
+
+447 day images:
+
+mean_IU: 0.9208358490664053
+frequency weighted IU: 0.961544373703267
+mean accuracy: 0.9492155821517386
+pixel accuracy: 0.9754851817017974
+mIU_penalized_fp_no_background: 0.8022607253536721
+
+186 night images:
+mean_IU: 0.6919448857492123
+frequency weighted IU: 0.8301668379907033
+mean accuracy: 0.8361818766926736
+pixel accuracy: 0.8822732248613913
+mIU_penalized_fp_no_background: 0.43828268527656244
+CCE: 0.8822732244127542
+
+2.

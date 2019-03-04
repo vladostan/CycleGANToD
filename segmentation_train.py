@@ -289,7 +289,7 @@ print("Callbacks: {}\n".format(clbacks))
 # In[ ]:
 steps_per_epoch = len(images_train)//batch_size
 epochs = 1000
-verbose = 1
+verbose = 2
 
 print("Steps per epoch: {}".format(steps_per_epoch))
 
