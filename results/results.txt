@@ -3,12 +3,12 @@ weights  "/home/kenny/Desktop/CycleGANToD/weights/segmentation/2019-03-03 22-00-
 BARE
 
 447 day images:
-
-mean_IU: 0.9208358490664053
-frequency weighted IU: 0.961544373703267
-mean accuracy: 0.9492155821517386
-pixel accuracy: 0.9754851817017974
-mIU_penalized_fp_no_background: 0.8022607253536721
+mean_IU: 0.9208359066301264
+frequency weighted IU: 0.9615444003008902
+mean accuracy: 0.9492156178764647
+pixel accuracy: 0.9754851953561948
+mIU_penalized_fp_no_background: 0.8022608511724546
+CCE: 0.9754851955162057
 
 186 night images:
 mean_IU: 0.6919448857492123

@@ -14,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # In[2]:
 PATH = os.path.abspath('datasets')
 
-imgs_dir = "trainB"
+imgs_dir = "images"
 
 SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/", imgs_dir)]
 
@@ -93,13 +93,29 @@ from segmentation_models import Linknet
 
 model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, activation='softmax')
 
-weights_path = "/home/kenny/Desktop/CycleGANToD/weights/segmentation/2019-03-03 22-00-24.hdf5" # for 447 day images of innopolis in 2018 bare training 
+weights_path = "weights/segmentation/2019-03-03 22-00-24.hdf5" # for 447 day images of innopolis in 2018 bare training 
 
 model.load_weights(weights_path)
 
 print("Model summary:")
 model.summary()
 model._make_predict_function()
+
+# In[ ]:
+from keras import optimizers
+
+learning_rate = 1e-4
+optimizer = optimizers.Adam(lr = learning_rate)
+
+losses = ['categorical_crossentropy']
+metrics = ['categorical_accuracy']
+
+print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
+
+#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), sample_weight_mode = "temporal",
+#              loss = losses, metrics = metrics)
+#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), loss = losses, metrics = metrics)
+model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 # In[ ]:
 #steps = len(images)//batch_size
