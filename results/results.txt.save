@@ -1,0 +1,16 @@
+inkNet trained for 447 day images 
+weights  "/home/kenny/Desktop/CycleGANToD/weights/segmentation/2019-03-03 22-00-24.hdf5"
+BARE
+
+447 day images:
+
+
+186 night images:
+
+mean_IU: 0.4182798519625538
+frequency weighted IU: 0.6383418046705414
+mean accuracy: 0.5279926792567096
+pixel accuracy: 0.7383592831191192
+mIU_penalized_fp_no_background: 0.43828268527656244
+
+2.
