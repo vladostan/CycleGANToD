@@ -12,7 +12,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
-log = False
+log = True
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -46,24 +46,23 @@ print('Date and time: {}\n'.format(loggername))
 
 # READ IMAGES AND MASKS
 # In[2]:
-PATH = os.path.abspath('datasets')
+PATH = os.path.abspath('results')
 
-SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/images")]
+SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno_cyclegan/test_latest/images")]
 
 images = []
 
 for si in SOURCE_IMAGES:
     images.extend(glob(os.path.join(si, "*.png")))
     
-labels = []
-
-for i in range(len(images)):
-    labels.append(images[i].replace("images", "labels"))
+images.sort()
 
 print("Datasets used: {}\n".format(SOURCE_IMAGES))
+    
+labels = []
 
-images.sort()
-labels.sort()
+for i in range(0, len(images), 2):
+    labels.append(images[i].replace("results/day2night_inno_cyclegan/test_latest/images", "datasets/day2night_inno/labels").replace("_fake_B",""))
 
 print(len(images))
 print(len(labels))
@@ -72,111 +71,34 @@ print(len(labels))
 from PIL import Image
 
 def get_image(path):
-    
+    img = Image.open(path)
+    img = np.array(img)
+    return img
+
+def get_label(path):
     img = Image.open(path)
     img = img.resize((640,256))
     img = np.array(img)
-    
     return img
 
-# In[]
-# Visualise
-visualize = False
-
-if visualize:
-    i = 17
-    x = get_image(images[i])
-    y = get_image(labels[i])
-    fig, axes = plt.subplots(nrows = 2, ncols = 1)
-    axes[0].imshow(x)
-    axes[1].imshow(y, cmap = 'gray')
-    fig.tight_layout()
-
-print("Image dtype:{}".format(get_image(images[0]).dtype))
-print("Label dtype:{}\n".format(get_image(labels[0]).dtype))
-
-# # Prepare for training
-# In[ ]:
-from sklearn.model_selection import train_test_split
-
-test_size = 0
-images_train, images_test, labels_train, labels_test = train_test_split(images, labels, test_size=test_size, random_state=1)
-
-print(len(images_train))
-print(len(labels_train))
-print(len(images_test))
-print(len(labels_test))
-
-# In[]: Class weights count
-num_classes = 3
-cw = {'background':0, 'direct':0, 'alternative':0}
-class_weight_counting = False
-
-def classcount(lbl, num_classes=num_classes):
-    w,h = lbl.shape
-    n = np.zeros(num_classes-1, dtype=np.int32)
-    for i in range(w):
-        for j in range(h):
-            for c in range(num_classes-1):
-                if(lbl[i,j] == c):
-                    n[c] += 1
-    return n
-
-if class_weight_counting:
-    for cntr,i in enumerate(labels_train):
-        n = classcount(get_image(i))
-        cw['background'] += n[0]
-        cw['direct'] += n[1]
-        cw['alternative'] += 256*640-n[0]-n[1]
-        print(cw)
-        print(cntr)
-        print(sum(cw.values()) == (cntr+1)*256*640)
-    
-# In[]: Class weighting
-#class_weights = np.median(np.asarray(list(cw.values()))/sum(cw.values()))/(np.asarray(list(cw.values()))/sum(cw.values()))
+# In[]:
 class_weights = np.array([0.16626288, 1.,         1.46289384]) # for 447 day images of innopolis in 2018 
-#print("Class weights: {}\n".format(class_weights))
 
 # In[]: AUGMENTATIONS
-doGAN = True
-
-if doGAN:
-    print("DOING GAN")
-else:
-    print("NO GAN")
-
-if doGAN:
-    
-    def dogan(image):
-    
-        augmented = aug(image=image)
-        image_augmented = augmented['image']
-        
-        return image_augmented
-    
-# In[]:
-#  GAN generated night images storage
-import torch
-
-print("Start generation of night images using CycleGAN")
-
-x_night = []
-for im in images_train:
-    
-    x_day = get_image(im)
-    x_day = 
-    x_night.append(GANMODEL(x_day))
+print("DOING GAN")
 
 # In[]: CUSTOM GENERATORS
 from keras.utils import to_categorical
 
-def custom_generator(images_path, labels_path, preprocessing_fn = None, doaug = False, batch_size = 1, validation = False):
+num_classes = 3
+
+def custom_generator(images_path, labels_path, preprocessing_fn = None, batch_size = 1, validation = False):
     
     i = 0
     
     while True:
         
-        if validation or not doGAN:
+        if validation:
 	        x_batch = np.zeros((batch_size, 256, 640, 3))
 	        y_batch = np.zeros((batch_size, 256, 640))
         else:
@@ -188,14 +110,14 @@ def custom_generator(images_path, labels_path, preprocessing_fn = None, doaug = 
             if i == len(images_path):
                 i = 0
                 
-            x = get_image(images_path[i])
-            y = get_image(labels_path[i])
+            x = get_image(images_path[2*i+1])
+            y = get_label(labels_path[i])
             
-            if validation or not doGAN:
+            if validation:
                 x_batch[b] = x
                 y_batch[b] = y
             else:
-                x2 = dogan(x)
+                x2 = get_image(images_path[2*i])
                 x_batch[2*b] = x
                 x_batch[2*b+1] = x2
                 y_batch[2*b] = y
@@ -214,26 +136,14 @@ from segmentation_models.backbones import get_preprocessing
 
 batch_size = 1
 
-#images_train = images_train[:50]
-
 backbone = 'resnet18'
 
 preprocessing_fn = get_preprocessing(backbone)
 
-train_gen = custom_generator(images_path = images_train, 
-                             labels_path = labels_train, 
+train_gen = custom_generator(images_path = images, 
+                             labels_path = labels, 
                              preprocessing_fn = preprocessing_fn, 
-                             doaug = doaug,
                              batch_size = batch_size)
-
-if visualize:
-    fig, axes = plt.subplots(nrows=2, ncols=2)
-    fig.set_size_inches(15, 10)
-    axes[0,0].imshow(train_gen[0][0])
-    axes[0,1].imshow(train_gen[1][0,:,:,0], cmap='gray')
-    axes[1,0].imshow(train_gen[1][0,:,:,1], cmap='gray')
-    axes[1,1].imshow(train_gen[1][0,:,:,2], cmap='gray')
-    fig.tight_layout()
 
 # In[ ]:
 # # Define model
@@ -255,9 +165,6 @@ metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
 
-#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), sample_weight_mode = "temporal",
-#              loss = losses, metrics = metrics)
-#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), loss = losses, metrics = metrics)
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 
@@ -278,7 +185,7 @@ print("Callbacks: {}\n".format(clbacks))
 
 
 # In[ ]:
-steps_per_epoch = len(images_train)//batch_size
+steps_per_epoch = len(images)//batch_size
 epochs = 1000
 verbose = 2
 
@@ -299,9 +206,3 @@ now = datetime.datetime.now()
 loggername = str(now).split(".")[0]
 loggername = loggername.replace(":","-")
 print('Date and time: {}\n'.format(loggername))
-
-# In[]:
-#y = model.predict(np.expand_dims(get_image(images_train[4]), axis=0))
-#out = y.squeeze()
-#mask = np.argmax(out, axis=-1)
-#plt.imshow(mask)
