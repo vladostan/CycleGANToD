@@ -8,7 +8,7 @@
           display_winsize: 256                           
                     epoch: latest                        
                      eval: False                         
-                  gpu_ids: -1                            
+                  gpu_ids: 0,1                           
                 init_gain: 0.02                          
                 init_type: normal                        
                  input_nc: 3                             
@@ -28,7 +28,7 @@
                   no_flip: False                         
                      norm: instance                      
                     ntest: inf                           
-                 num_test: 100                           
+                 num_test: 1000                          
               num_threads: 4                             
                 output_nc: 3                             
                     phase: test                          
