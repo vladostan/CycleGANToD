@@ -107,7 +107,7 @@ def custom_generator(images_path, labels_path, preprocessing_fn = None, batch_si
         
         for b in range(batch_size):
             
-            if i == len(images_path):
+            if i == len(labels_path):
                 i = 0
                 
             x = get_image(images_path[2*i+1])
