@@ -5,6 +5,8 @@ import os
 import matplotlib.pylab as plt
 from glob import glob
 import numpy as np
+import cv2
+import PIL.Image as Image
 
 # In[]
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -14,8 +16,11 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # In[2]:
 PATH = os.path.abspath('datasets')
 
-#imgs_dir = "images"
-imgs_dir = "trainB"
+imgs_dir = "images"
+visdir = 'train/'
+
+#imgs_dir = "trainB"
+#visdir = 'test/'
 
 SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/", imgs_dir)]
 
@@ -38,8 +43,6 @@ print(len(images))
 print(len(labels))
 
 # In[]
-from PIL import Image
-
 def get_image(path):
     
     img = Image.open(path)
@@ -52,41 +55,13 @@ def get_image(path):
 from keras.utils import to_categorical
 
 num_classes = 3
-#
-#def custom_generator(images_path, labels_path, batch_size = 1):
-#    
-#    i = 0
-#    
-#    while True:
-#        
-#        x_batch = np.zeros((batch_size, 256, 640, 3))
-#        
-#        for b in range(batch_size):
-#            
-#            if i == len(images_path):
-#                i = 0
-#                
-#            x = get_image(images_path[i])            
-#            x_batch[b] = x
-#                
-#            i += 1
-#            
-#        x_batch = preprocessing_fn(x_batch)
-#
-#        yield x_batch
            
 # In[ ]:
 from segmentation_models.backbones import get_preprocessing
 
-#batch_size = 1
-
 backbone = 'resnet18'
 
 preprocessing_fn = get_preprocessing(backbone)
-
-#test_gen = custom_generator(images_path = images, 
-#                             labels_path = labels,
-#                             batch_size = batch_size)
 
 # In[ ]:
 # # Define model
@@ -95,9 +70,16 @@ from segmentation_models import Linknet
 model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, activation='softmax')
 
 #weights_path = "weights/segmentation/2019-03-03 22-00-24.hdf5" # for 447 day images of innopolis in 2018 bare training 
+#visdir+='bare/'
+
 #weights_path = "weights/segmentation/2019-03-05 10-41-19.hdf5" # for 447 day images of innopolis in 2018 GANed training 
-weights_path = "weights/segmentation/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
-#weights_path = "weights/segmentation/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='gan/'
+
+#weights_path = "weights/segmentation/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
+#visdir+='alb/'
+
+weights_path = "weights/segmentation/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+visdir+='mix/'
 
 model.load_weights(weights_path)
 
@@ -116,41 +98,13 @@ metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
 
-#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), sample_weight_mode = "temporal",
-#              loss = losses, metrics = metrics)
-#model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), loss = losses, metrics = metrics)
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
-
-# In[ ]:
-#steps = len(images)//batch_size
-#verbose = 1
-#
-#print("Steps: {}".format(steps))
-#
-#print("Starting testing...\n")
-#y_pred = model.predict_generator(
-#    generator = test_gen,
-#    steps = steps,
-#    verbose = verbose
-#)
-#
-#print("Finished testing\n")
-
-# In[]:
-#y_pred = to_categorical(np.argmax(y_pred, axis=-1))
-#y_pred = y_pred.astype(np.int64)
-#
-#y_true = []
-#
-#for l in labels:
-#    y_true.append(get_image(l))
-#    
-#y_true = to_categorical(y_true, num_classes=num_classes)
-#y_true = y_true.astype('int64')
 
 # In[]:
 from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy
 from tqdm import tqdm
+
+vis = True
 
 meaniu = 0
 freqweightediu = 0
@@ -164,17 +118,32 @@ dlina = len(images)
 for i in tqdm(range(dlina)):
     
     x = get_image(images[i])
+    
+    if vis:
+        x_vis = x.copy()
+        
     x = np.expand_dims(x, axis = 0)
     x = preprocessing_fn(x)
     
     y_pred = model.predict(x)
     y_pred = np.argmax(y_pred, axis = -1)
     y_pred = np.squeeze(y_pred)
-#    y_pred = to_categorical(y_pred, num_classes=num_classes)
-    
+
+    if vis:
+        y_pred_vis = y_pred.astype(np.uint8)
+        y_pred_vis *= 255//2
+        overlay_pred = cv2.addWeighted(x_vis,1,cv2.applyColorMap(y_pred_vis,cv2.COLORMAP_OCEAN),1,0)
+        
     y_true = get_image(labels[i])
-    y_true = y_true.astype('int64')
-    
+    y_true = y_true.astype('int64')  
+
+    if vis:
+        y_true_vis = y_true.astype(np.uint8)
+        y_true_vis *= 255//2
+        overlay_true = cv2.addWeighted(x_vis,1,cv2.applyColorMap(y_true_vis,cv2.COLORMAP_OCEAN),1,0)
+        tosave = Image.fromarray(np.vstack((overlay_true, overlay_pred)))
+        tosave.save("results/CCE/vis/{}{}".format(visdir, images[i].split('/')[-1]))
+        
     meaniu += mean_IU(y_pred, y_true)/dlina
     freqweightediu += frequency_weighted_IU(y_pred, y_true)/dlina
     meanacc += mean_accuracy(y_pred, y_true)/dlina
