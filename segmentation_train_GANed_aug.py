@@ -12,7 +12,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
-log = False
+log = True
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -236,7 +236,7 @@ print("Callbacks: {}\n".format(clbacks))
 # In[ ]:
 steps_per_epoch = len(images)//batch_size
 epochs = 1000
-verbose = 1
+verbose = 2
 
 print("Steps per epoch: {}".format(steps_per_epoch))
 
