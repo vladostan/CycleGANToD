@@ -16,11 +16,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # In[2]:
 PATH = os.path.abspath('datasets')
 
-imgs_dir = "images"
-visdir = 'train/'
+losstype = 'dice'
 
-#imgs_dir = "trainB"
-#visdir = 'test/'
+#imgs_dir = "images"
+#visdir = 'train/'
+
+imgs_dir = "trainB"
+visdir = 'test/'
 
 SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/", imgs_dir)]
 
@@ -69,17 +71,23 @@ from segmentation_models import Linknet
 
 model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, activation='softmax')
 
-#weights_path = "weights/segmentation/2019-03-03 22-00-24.hdf5" # for 447 day images of innopolis in 2018 bare training 
+################### CCE
+#weights_path = "weights/segmentation/CCE/2019-03-03 22-00-24.hdf5" # for 447 day images of innopolis in 2018 bare training 
 #visdir+='bare/'
 
-#weights_path = "weights/segmentation/2019-03-05 10-41-19.hdf5" # for 447 day images of innopolis in 2018 GANed training 
+#weights_path = "weights/segmentation/CCE/2019-03-05 10-41-19.hdf5" # for 447 day images of innopolis in 2018 GANed training 
 #visdir+='gan/'
 
-#weights_path = "weights/segmentation/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
+#weights_path = "weights/segmentation/CCE/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
 #visdir+='alb/'
 
-weights_path = "weights/segmentation/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#weights_path = "weights/segmentation/CCE/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### DICE
+weights_path = "weights/segmentation/dice/2019-03-27 07-55-59.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
 visdir+='mix/'
+
 
 model.load_weights(weights_path)
 
@@ -89,29 +97,33 @@ model._make_predict_function()
 
 # In[ ]:
 from keras import optimizers
+from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
+from losses import dice_coef_multiclass_loss, dice_coef_multiclass
 
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
-losses = ['categorical_crossentropy']
-metrics = ['categorical_accuracy']
+#losses = ['categorical_crossentropy']
+#metrics = ['categorical_accuracy']
+
+losses = [dice_coef_multiclass_loss]
+metrics = [dice_coef_multiclass]
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
 
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 # In[]:
-from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
 from tqdm import tqdm
 
-vis = False
+vis = True
 
 meaniu = 0
 freqweightediu = 0
 meanacc = 0
 pixacc = 0
 mIU_penalized = 0
-cce = 0
+dice = 0
 
 dlina = len(images)
 
@@ -142,7 +154,7 @@ for i in tqdm(range(dlina)):
         y_true_vis *= 255//2
         overlay_true = cv2.addWeighted(x_vis,1,cv2.applyColorMap(y_true_vis,cv2.COLORMAP_OCEAN),1,0)
         tosave = Image.fromarray(np.vstack((overlay_true, overlay_pred)))
-        tosave.save("results/CCE/vis/{}{}".format(visdir, images[i].split('/')[-1]))
+        tosave.save("results/{}/vis/{}{}".format(losstype, visdir, images[i].split('/')[-1]))
         
     meaniu += mean_IU(y_pred, y_true)/dlina
     freqweightediu += frequency_weighted_IU(y_pred, y_true)/dlina
@@ -152,14 +164,14 @@ for i in tqdm(range(dlina)):
     mIU_penalized += mIU_fp_penalty(y_pred, y_true)/dlina
     
     y_true = to_categorical(y_true, num_classes=num_classes)
-    cce += model.evaluate(x=x, y=np.expand_dims(y_true,axis=0))[-1]/dlina
+    dice += model.evaluate(x=x, y=np.expand_dims(y_true,axis=0))[-1]/dlina
     
 print("mean_IU: {}".format(meaniu))
 print("frequency weighted IU: {}".format(freqweightediu))
 print("mean accuracy: {}".format(meanacc))
 print("pixel accuracy: {}".format(pixacc))
 print("mIU_penalized_fp_no_background: {}".format(mIU_penalized))
-print("CCE: {}".format(cce))
+print("dice: {}".format(dice))
 
 # In[]:
 #i = 13
