@@ -1,12 +1,13 @@
 # coding: utf-8
 import numpy as np
+from keras.utils import to_categorical
 
 def tptnfpfn(pred_labels, true_labels):
     # True Positive (TP): we predict a label of 1 (positive), and the true label is 1.
     TP = np.sum(np.logical_and(pred_labels == 1, true_labels == 1))
 
     # True Negative (TN): we predict a label of 0 (negative), and the true label is 0.
-    TN = np.sum(np.logical_and(pred_labels == 0, true_labels == 0))
+#    TN = np.sum(np.logical_and(pred_labels == 0, true_labels == 0))
 
     # False Positive (FP): we predict a label of 1 (positive), but the true label is 0.
     FP = np.sum(np.logical_and(pred_labels == 1, true_labels == 0))
@@ -26,6 +27,17 @@ def tptnfpfn(pred_labels, true_labels):
 #    print(IU)
     
     return IU
+
+def mIU_fp_penalty(y_pred, y_true):
+    
+    mIU_solo = 0
+    
+    for cl in range(1,3):
+        pred_labels = to_categorical(y_pred, num_classes=3)[...,cl]
+        true_labels = to_categorical(y_true, num_classes=3)[...,cl]
+        mIU_solo += tptnfpfn(pred_labels, true_labels)/2
+        
+    return mIU_solo
 
 def pixel_accuracy(eval_segm, gt_segm):
     '''

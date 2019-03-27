@@ -101,10 +101,10 @@ print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimiz
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 # In[]:
-from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy
+from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
 from tqdm import tqdm
 
-vis = True
+vis = False
 
 meaniu = 0
 freqweightediu = 0
@@ -148,15 +148,8 @@ for i in tqdm(range(dlina)):
     freqweightediu += frequency_weighted_IU(y_pred, y_true)/dlina
     meanacc += mean_accuracy(y_pred, y_true)/dlina
     pixacc += pixel_accuracy(y_pred, y_true)/dlina
-    
-    mIU_solo = 0
-    
-    for cl in range(1,3):
-        pred_labels = to_categorical(y_pred, num_classes=num_classes)[...,cl]
-        true_labels = to_categorical(y_true, num_classes=num_classes)[...,cl]
-        mIU_solo += tptnfpfn(pred_labels, true_labels)/2
-        
-    mIU_penalized += mIU_solo/dlina
+       
+    mIU_penalized += mIU_fp_penalty(y_pred, y_true)/dlina
     
     y_true = to_categorical(y_true, num_classes=num_classes)
     cce += model.evaluate(x=x, y=np.expand_dims(y_true,axis=0))[-1]/dlina

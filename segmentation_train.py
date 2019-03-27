@@ -12,7 +12,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
-log = True
+log = False
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -255,11 +255,16 @@ model.summary()
 
 # In[ ]:
 from keras import optimizers
+from metrics import mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
+from losses import dice_coef_loss, iou_loss_score
 
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
-losses = ['categorical_crossentropy']
+#losses = ['categorical_crossentropy']
+
+losses = [iou_loss_score]
+
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -273,15 +278,16 @@ model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 # In[ ]:
 from keras import callbacks
 
-model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation/{}.hdf5'.format(loggername), monitor = 'loss', verbose = 1, save_best_only = True, save_weights_only = True)
 #tensor_board = callbacks.TensorBoard(log_dir='./tblogs')
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='loss', factor = 0.5, patience = 4, verbose = 1, min_lr = 1e-7)
 early_stopper = callbacks.EarlyStopping(monitor='loss', patience = 10, verbose = 1)
-clbacks = [model_checkpoint, reduce_lr, early_stopper]
+clbacks = [reduce_lr, early_stopper]
 
 if log:
     csv_logger = callbacks.CSVLogger('logs/segmentation/{}.log'.format(loggername))
+    model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation/{}.hdf5'.format(loggername), monitor = 'loss', verbose = 1, save_best_only = True, save_weights_only = True)
     clbacks.append(csv_logger)
+    clbacks.append(model_checkpoint)
 
 print("Callbacks: {}\n".format(clbacks))
 
@@ -289,7 +295,7 @@ print("Callbacks: {}\n".format(clbacks))
 # In[ ]:
 steps_per_epoch = len(images_train)//batch_size
 epochs = 1000
-verbose = 2
+verbose = 1
 
 print("Steps per epoch: {}".format(steps_per_epoch))
 
@@ -308,9 +314,3 @@ now = datetime.datetime.now()
 loggername = str(now).split(".")[0]
 loggername = loggername.replace(":","-")
 print('Date and time: {}\n'.format(loggername))
-
-# In[]:
-#y = model.predict(np.expand_dims(get_image(images_train[4]), axis=0))
-#out = y.squeeze()
-#mask = np.argmax(out, axis=-1)
-#plt.imshow(mask)
