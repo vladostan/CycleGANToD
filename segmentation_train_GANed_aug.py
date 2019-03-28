@@ -2,7 +2,6 @@
 
 # In[1]:
 import os
-import matplotlib.pylab as plt
 from glob import glob
 import numpy as np
 import datetime
@@ -13,6 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
 log = True
+verbose = 2
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -205,31 +205,35 @@ model.summary()
 
 # In[ ]:
 from keras import optimizers
-from losses import dice_coef_multiclass_loss
-
-learning_rate = 1e-4
-optimizer = optimizers.Adam(lr = learning_rate)
+from losses import dice_coef_multiclass_loss, mIU_fp_penalty_loss
+from keras_contrib.losses import jaccard_distance
 
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
 #losses = ['categorical_crossentropy']
 
-losses = [dice_coef_multiclass_loss]
+losses = [mIU_fp_penalty_loss]
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
 
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
-
 # In[ ]:
 from keras import callbacks
+from callbacks import TelegramCallback
 
-#tensor_board = callbacks.TensorBoard(log_dir='./tblogs')
+config = {
+    'token': '720029625:AAGG5aS46wOliEIs0HmUFgg8koN_ScI3AIY',   # paste your bot token
+    'telegram_id': 218977821,                                   # paste your telegram_id
+}
+tg_callback = TelegramCallback(config)
+
+tensor_board = callbacks.TensorBoard(log_dir='./tblogs')
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='loss', factor = 0.5, patience = 4, verbose = 1, min_lr = 1e-7)
 early_stopper = callbacks.EarlyStopping(monitor='loss', patience = 10, verbose = 1)
-clbacks = [reduce_lr, early_stopper]
+clbacks = [reduce_lr, early_stopper, tensor_board, tg_callback]
 
 if log:
     csv_logger = callbacks.CSVLogger('logs/segmentation/{}.log'.format(loggername))
@@ -239,11 +243,9 @@ if log:
 
 print("Callbacks: {}\n".format(clbacks))
 
-
 # In[ ]:
 steps_per_epoch = len(images)//batch_size
 epochs = 1000
-verbose = 2
 
 print("Steps per epoch: {}".format(steps_per_epoch))
 

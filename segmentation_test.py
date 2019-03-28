@@ -16,7 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # In[2]:
 PATH = os.path.abspath('datasets')
 
-losstype = 'dice'
+losstype = 'myiou'
 
 #imgs_dir = "images"
 #visdir = 'train/'
@@ -85,9 +85,16 @@ model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, ac
 #visdir+='mix/'
 
 ################### DICE
-weights_path = "weights/segmentation/dice/2019-03-27 07-55-59.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
-visdir+='mix/'
+#weights_path = "weights/segmentation/dice/2019-03-27 07-55-59.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
 
+################### JACCARD
+#weights_path = "weights/segmentation/jaccard/2019-03-27 13-59-56.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### JACCARD
+weights_path = "weights/segmentation/myiou/2019-03-28 16-19-29.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+visdir+='mix/'
 
 model.load_weights(weights_path)
 
@@ -98,7 +105,8 @@ model._make_predict_function()
 # In[ ]:
 from keras import optimizers
 from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
-from losses import dice_coef_multiclass_loss, dice_coef_multiclass
+from losses import dice_coef_multiclass_loss, dice_coef_multiclass, mIU_fp_penalty_loss
+from keras_contrib.losses import jaccard_distance
 
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
@@ -106,7 +114,7 @@ optimizer = optimizers.Adam(lr = learning_rate)
 #losses = ['categorical_crossentropy']
 #metrics = ['categorical_accuracy']
 
-losses = [dice_coef_multiclass_loss]
+losses = [mIU_fp_penalty_loss]
 metrics = [dice_coef_multiclass]
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -116,7 +124,7 @@ model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 # In[]:
 from tqdm import tqdm
 
-vis = True
+vis = False
 
 meaniu = 0
 freqweightediu = 0
