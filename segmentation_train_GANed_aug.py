@@ -205,7 +205,7 @@ model.summary()
 
 # In[ ]:
 from keras import optimizers
-from losses import dice_coef_multiclass_loss, mIU_fp_penalty_loss
+from losses import dice_coef_multiclass_loss, mIU_fp_penalty_loss, focal_loss
 from keras_contrib.losses import jaccard_distance
 
 learning_rate = 1e-4
@@ -213,7 +213,7 @@ optimizer = optimizers.Adam(lr = learning_rate)
 
 #losses = ['categorical_crossentropy']
 
-losses = [mIU_fp_penalty_loss]
+losses = [focal_loss]
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))

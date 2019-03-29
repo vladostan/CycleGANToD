@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import keras.backend as K
-from metrics import tptnfpfn
-from keras.utils import to_categorical
+import tensorflow as tf
 
 def dice_coef_binary(y_true, y_pred, smooth=1):
     intersection = K.sum(K.abs(y_true * y_pred), axis=-1)
@@ -39,10 +38,18 @@ def mIU_fp_penalty(y_true, y_pred, smooth=1e-7):
     
     return K.mean((tp / (tp + 2.*fp + fn + smooth)))
 
-def mIU_fp_penalty_loss(y_true, y_pred):
-    
+
+def mIU_fp_penalty_loss(y_true, y_pred):    
     return 1 - mIU_fp_penalty(y_true, y_pred)
-    
+
+
+def focal_loss(y_true, y_pred, gamma=2, alpha=0.75):
+    eps = 1e-12
+    y_pred=K.clip(y_pred,eps,1.-eps) #improve the stability of the focal loss and see issues 1 for more information
+    pt_1 = tf.where(tf.equal(y_true, 1), y_pred, tf.ones_like(y_pred))
+    pt_0 = tf.where(tf.equal(y_true, 0), y_pred, tf.zeros_like(y_pred))
+    return -K.sum(alpha * K.pow(1. - pt_1, gamma) * K.log(pt_1))-K.sum((1-alpha) * K.pow( pt_0, gamma) * K.log(1. - pt_0))
+
 
 def iou_loss_score(y_true, y_pred, smooth=1):
     intersection = K.sum(K.abs(y_true * y_pred), axis=-1)
