@@ -11,8 +11,8 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
-log = True
-verbose = 2
+log = False
+verbose = 1
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -205,7 +205,7 @@ model.summary()
 
 # In[ ]:
 from keras import optimizers
-from losses import dice_coef_multiclass_loss, mIU_fp_penalty_loss, focal_loss
+from losses import dice_coef_multiclass_loss, mIU_fp_penalty_loss, focal_loss, dice_fp_penalty_loss, dice_fpfn_weighted_loss, dice_iou_loss, dice_iou_conditional_loss
 from keras_contrib.losses import jaccard_distance
 
 learning_rate = 1e-4
@@ -213,7 +213,7 @@ optimizer = optimizers.Adam(lr = learning_rate)
 
 #losses = ['categorical_crossentropy']
 
-losses = [focal_loss]
+losses = [dice_iou_conditional_loss]
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))

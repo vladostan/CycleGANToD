@@ -1,0 +1,1238 @@
+Date and time: 2019-03-31 18-16-31
+
+Datasets used: ['/home/vostankovich/CycleGANToD/results/day2night_inno_cyclegan/test_latest/images']
+
+894
+447
+DOING AUGMENTATION
+DOING GAN
+Model summary:
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+data (InputLayer)               (None, 256, 640, 3)  0                                            
+__________________________________________________________________________________________________
+bn_data (BatchNormalization)    (None, 256, 640, 3)  9           data[0][0]                       
+__________________________________________________________________________________________________
+zero_padding2d_1 (ZeroPadding2D (None, 262, 646, 3)  0           bn_data[0][0]                    
+__________________________________________________________________________________________________
+conv0 (Conv2D)                  (None, 128, 320, 64) 9408        zero_padding2d_1[0][0]           
+__________________________________________________________________________________________________
+bn0 (BatchNormalization)        (None, 128, 320, 64) 256         conv0[0][0]                      
+__________________________________________________________________________________________________
+relu0 (Activation)              (None, 128, 320, 64) 0           bn0[0][0]                        
+__________________________________________________________________________________________________
+zero_padding2d_2 (ZeroPadding2D (None, 130, 322, 64) 0           relu0[0][0]                      
+__________________________________________________________________________________________________
+pooling0 (MaxPooling2D)         (None, 64, 160, 64)  0           zero_padding2d_2[0][0]           
+__________________________________________________________________________________________________
+stage1_unit1_bn1 (BatchNormaliz (None, 64, 160, 64)  256         pooling0[0][0]                   
+__________________________________________________________________________________________________
+stage1_unit1_relu1 (Activation) (None, 64, 160, 64)  0           stage1_unit1_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_3 (ZeroPadding2D (None, 66, 162, 64)  0           stage1_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+stage1_unit1_conv1 (Conv2D)     (None, 64, 160, 64)  36864       zero_padding2d_3[0][0]           
+__________________________________________________________________________________________________
+stage1_unit1_bn2 (BatchNormaliz (None, 64, 160, 64)  256         stage1_unit1_conv1[0][0]         
+__________________________________________________________________________________________________
+stage1_unit1_relu2 (Activation) (None, 64, 160, 64)  0           stage1_unit1_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_4 (ZeroPadding2D (None, 66, 162, 64)  0           stage1_unit1_relu2[0][0]         
+__________________________________________________________________________________________________
+stage1_unit1_conv2 (Conv2D)     (None, 64, 160, 64)  36864       zero_padding2d_4[0][0]           
+__________________________________________________________________________________________________
+stage1_unit1_sc (Conv2D)        (None, 64, 160, 64)  4096        stage1_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+add_1 (Add)                     (None, 64, 160, 64)  0           stage1_unit1_conv2[0][0]         
+                                                                 stage1_unit1_sc[0][0]            
+__________________________________________________________________________________________________
+stage1_unit2_bn1 (BatchNormaliz (None, 64, 160, 64)  256         add_1[0][0]                      
+__________________________________________________________________________________________________
+stage1_unit2_relu1 (Activation) (None, 64, 160, 64)  0           stage1_unit2_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_5 (ZeroPadding2D (None, 66, 162, 64)  0           stage1_unit2_relu1[0][0]         
+__________________________________________________________________________________________________
+stage1_unit2_conv1 (Conv2D)     (None, 64, 160, 64)  36864       zero_padding2d_5[0][0]           
+__________________________________________________________________________________________________
+stage1_unit2_bn2 (BatchNormaliz (None, 64, 160, 64)  256         stage1_unit2_conv1[0][0]         
+__________________________________________________________________________________________________
+stage1_unit2_relu2 (Activation) (None, 64, 160, 64)  0           stage1_unit2_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_6 (ZeroPadding2D (None, 66, 162, 64)  0           stage1_unit2_relu2[0][0]         
+__________________________________________________________________________________________________
+stage1_unit2_conv2 (Conv2D)     (None, 64, 160, 64)  36864       zero_padding2d_6[0][0]           
+__________________________________________________________________________________________________
+add_2 (Add)                     (None, 64, 160, 64)  0           stage1_unit2_conv2[0][0]         
+                                                                 add_1[0][0]                      
+__________________________________________________________________________________________________
+stage2_unit1_bn1 (BatchNormaliz (None, 64, 160, 64)  256         add_2[0][0]                      
+__________________________________________________________________________________________________
+stage2_unit1_relu1 (Activation) (None, 64, 160, 64)  0           stage2_unit1_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_7 (ZeroPadding2D (None, 66, 162, 64)  0           stage2_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+stage2_unit1_conv1 (Conv2D)     (None, 32, 80, 128)  73728       zero_padding2d_7[0][0]           
+__________________________________________________________________________________________________
+stage2_unit1_bn2 (BatchNormaliz (None, 32, 80, 128)  512         stage2_unit1_conv1[0][0]         
+__________________________________________________________________________________________________
+stage2_unit1_relu2 (Activation) (None, 32, 80, 128)  0           stage2_unit1_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_8 (ZeroPadding2D (None, 34, 82, 128)  0           stage2_unit1_relu2[0][0]         
+__________________________________________________________________________________________________
+stage2_unit1_conv2 (Conv2D)     (None, 32, 80, 128)  147456      zero_padding2d_8[0][0]           
+__________________________________________________________________________________________________
+stage2_unit1_sc (Conv2D)        (None, 32, 80, 128)  8192        stage2_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+add_3 (Add)                     (None, 32, 80, 128)  0           stage2_unit1_conv2[0][0]         
+                                                                 stage2_unit1_sc[0][0]            
+__________________________________________________________________________________________________
+stage2_unit2_bn1 (BatchNormaliz (None, 32, 80, 128)  512         add_3[0][0]                      
+__________________________________________________________________________________________________
+stage2_unit2_relu1 (Activation) (None, 32, 80, 128)  0           stage2_unit2_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_9 (ZeroPadding2D (None, 34, 82, 128)  0           stage2_unit2_relu1[0][0]         
+__________________________________________________________________________________________________
+stage2_unit2_conv1 (Conv2D)     (None, 32, 80, 128)  147456      zero_padding2d_9[0][0]           
+__________________________________________________________________________________________________
+stage2_unit2_bn2 (BatchNormaliz (None, 32, 80, 128)  512         stage2_unit2_conv1[0][0]         
+__________________________________________________________________________________________________
+stage2_unit2_relu2 (Activation) (None, 32, 80, 128)  0           stage2_unit2_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_10 (ZeroPadding2 (None, 34, 82, 128)  0           stage2_unit2_relu2[0][0]         
+__________________________________________________________________________________________________
+stage2_unit2_conv2 (Conv2D)     (None, 32, 80, 128)  147456      zero_padding2d_10[0][0]          
+__________________________________________________________________________________________________
+add_4 (Add)                     (None, 32, 80, 128)  0           stage2_unit2_conv2[0][0]         
+                                                                 add_3[0][0]                      
+__________________________________________________________________________________________________
+stage3_unit1_bn1 (BatchNormaliz (None, 32, 80, 128)  512         add_4[0][0]                      
+__________________________________________________________________________________________________
+stage3_unit1_relu1 (Activation) (None, 32, 80, 128)  0           stage3_unit1_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_11 (ZeroPadding2 (None, 34, 82, 128)  0           stage3_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+stage3_unit1_conv1 (Conv2D)     (None, 16, 40, 256)  294912      zero_padding2d_11[0][0]          
+__________________________________________________________________________________________________
+stage3_unit1_bn2 (BatchNormaliz (None, 16, 40, 256)  1024        stage3_unit1_conv1[0][0]         
+__________________________________________________________________________________________________
+stage3_unit1_relu2 (Activation) (None, 16, 40, 256)  0           stage3_unit1_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_12 (ZeroPadding2 (None, 18, 42, 256)  0           stage3_unit1_relu2[0][0]         
+__________________________________________________________________________________________________
+stage3_unit1_conv2 (Conv2D)     (None, 16, 40, 256)  589824      zero_padding2d_12[0][0]          
+__________________________________________________________________________________________________
+stage3_unit1_sc (Conv2D)        (None, 16, 40, 256)  32768       stage3_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+add_5 (Add)                     (None, 16, 40, 256)  0           stage3_unit1_conv2[0][0]         
+                                                                 stage3_unit1_sc[0][0]            
+__________________________________________________________________________________________________
+stage3_unit2_bn1 (BatchNormaliz (None, 16, 40, 256)  1024        add_5[0][0]                      
+__________________________________________________________________________________________________
+stage3_unit2_relu1 (Activation) (None, 16, 40, 256)  0           stage3_unit2_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_13 (ZeroPadding2 (None, 18, 42, 256)  0           stage3_unit2_relu1[0][0]         
+__________________________________________________________________________________________________
+stage3_unit2_conv1 (Conv2D)     (None, 16, 40, 256)  589824      zero_padding2d_13[0][0]          
+__________________________________________________________________________________________________
+stage3_unit2_bn2 (BatchNormaliz (None, 16, 40, 256)  1024        stage3_unit2_conv1[0][0]         
+__________________________________________________________________________________________________
+stage3_unit2_relu2 (Activation) (None, 16, 40, 256)  0           stage3_unit2_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_14 (ZeroPadding2 (None, 18, 42, 256)  0           stage3_unit2_relu2[0][0]         
+__________________________________________________________________________________________________
+stage3_unit2_conv2 (Conv2D)     (None, 16, 40, 256)  589824      zero_padding2d_14[0][0]          
+__________________________________________________________________________________________________
+add_6 (Add)                     (None, 16, 40, 256)  0           stage3_unit2_conv2[0][0]         
+                                                                 add_5[0][0]                      
+__________________________________________________________________________________________________
+stage4_unit1_bn1 (BatchNormaliz (None, 16, 40, 256)  1024        add_6[0][0]                      
+__________________________________________________________________________________________________
+stage4_unit1_relu1 (Activation) (None, 16, 40, 256)  0           stage4_unit1_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_15 (ZeroPadding2 (None, 18, 42, 256)  0           stage4_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+stage4_unit1_conv1 (Conv2D)     (None, 8, 20, 512)   1179648     zero_padding2d_15[0][0]          
+__________________________________________________________________________________________________
+stage4_unit1_bn2 (BatchNormaliz (None, 8, 20, 512)   2048        stage4_unit1_conv1[0][0]         
+__________________________________________________________________________________________________
+stage4_unit1_relu2 (Activation) (None, 8, 20, 512)   0           stage4_unit1_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_16 (ZeroPadding2 (None, 10, 22, 512)  0           stage4_unit1_relu2[0][0]         
+__________________________________________________________________________________________________
+stage4_unit1_conv2 (Conv2D)     (None, 8, 20, 512)   2359296     zero_padding2d_16[0][0]          
+__________________________________________________________________________________________________
+stage4_unit1_sc (Conv2D)        (None, 8, 20, 512)   131072      stage4_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+add_7 (Add)                     (None, 8, 20, 512)   0           stage4_unit1_conv2[0][0]         
+                                                                 stage4_unit1_sc[0][0]            
+__________________________________________________________________________________________________
+stage4_unit2_bn1 (BatchNormaliz (None, 8, 20, 512)   2048        add_7[0][0]                      
+__________________________________________________________________________________________________
+stage4_unit2_relu1 (Activation) (None, 8, 20, 512)   0           stage4_unit2_bn1[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_17 (ZeroPadding2 (None, 10, 22, 512)  0           stage4_unit2_relu1[0][0]         
+__________________________________________________________________________________________________
+stage4_unit2_conv1 (Conv2D)     (None, 8, 20, 512)   2359296     zero_padding2d_17[0][0]          
+__________________________________________________________________________________________________
+stage4_unit2_bn2 (BatchNormaliz (None, 8, 20, 512)   2048        stage4_unit2_conv1[0][0]         
+__________________________________________________________________________________________________
+stage4_unit2_relu2 (Activation) (None, 8, 20, 512)   0           stage4_unit2_bn2[0][0]           
+__________________________________________________________________________________________________
+zero_padding2d_18 (ZeroPadding2 (None, 10, 22, 512)  0           stage4_unit2_relu2[0][0]         
+__________________________________________________________________________________________________
+stage4_unit2_conv2 (Conv2D)     (None, 8, 20, 512)   2359296     zero_padding2d_18[0][0]          
+__________________________________________________________________________________________________
+add_8 (Add)                     (None, 8, 20, 512)   0           stage4_unit2_conv2[0][0]         
+                                                                 add_7[0][0]                      
+__________________________________________________________________________________________________
+bn1 (BatchNormalization)        (None, 8, 20, 512)   2048        add_8[0][0]                      
+__________________________________________________________________________________________________
+relu1 (Activation)              (None, 8, 20, 512)   0           bn1[0][0]                        
+__________________________________________________________________________________________________
+decoder_stage0_conv1 (Conv2D)   (None, 8, 20, 128)   65536       relu1[0][0]                      
+__________________________________________________________________________________________________
+decoder_stage0_bn1 (BatchNormal (None, 8, 20, 128)   512         decoder_stage0_conv1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage0_relu1 (Activatio (None, 8, 20, 128)   0           decoder_stage0_bn1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage0_upsample2 (UpSam (None, 16, 40, 128)  0           decoder_stage0_relu1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage0_conv2 (Conv2D)   (None, 16, 40, 128)  147456      decoder_stage0_upsample2[0][0]   
+__________________________________________________________________________________________________
+decoder_stage0_bn2 (BatchNormal (None, 16, 40, 128)  512         decoder_stage0_conv2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage0_relu2 (Activatio (None, 16, 40, 128)  0           decoder_stage0_bn2[0][0]         
+__________________________________________________________________________________________________
+decoder_stage0_conv3 (Conv2D)   (None, 16, 40, 256)  32768       decoder_stage0_relu2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage0_bn3 (BatchNormal (None, 16, 40, 256)  1024        decoder_stage0_conv3[0][0]       
+__________________________________________________________________________________________________
+decoder_stage0_relu3 (Activatio (None, 16, 40, 256)  0           decoder_stage0_bn3[0][0]         
+__________________________________________________________________________________________________
+add_9 (Add)                     (None, 16, 40, 256)  0           decoder_stage0_relu3[0][0]       
+                                                                 stage4_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage1_conv1 (Conv2D)   (None, 16, 40, 64)   16384       add_9[0][0]                      
+__________________________________________________________________________________________________
+decoder_stage1_bn1 (BatchNormal (None, 16, 40, 64)   256         decoder_stage1_conv1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage1_relu1 (Activatio (None, 16, 40, 64)   0           decoder_stage1_bn1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage1_upsample2 (UpSam (None, 32, 80, 64)   0           decoder_stage1_relu1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage1_conv2 (Conv2D)   (None, 32, 80, 64)   36864       decoder_stage1_upsample2[0][0]   
+__________________________________________________________________________________________________
+decoder_stage1_bn2 (BatchNormal (None, 32, 80, 64)   256         decoder_stage1_conv2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage1_relu2 (Activatio (None, 32, 80, 64)   0           decoder_stage1_bn2[0][0]         
+__________________________________________________________________________________________________
+decoder_stage1_conv3 (Conv2D)   (None, 32, 80, 128)  8192        decoder_stage1_relu2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage1_bn3 (BatchNormal (None, 32, 80, 128)  512         decoder_stage1_conv3[0][0]       
+__________________________________________________________________________________________________
+decoder_stage1_relu3 (Activatio (None, 32, 80, 128)  0           decoder_stage1_bn3[0][0]         
+__________________________________________________________________________________________________
+add_10 (Add)                    (None, 32, 80, 128)  0           decoder_stage1_relu3[0][0]       
+                                                                 stage3_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage2_conv1 (Conv2D)   (None, 32, 80, 32)   4096        add_10[0][0]                     
+__________________________________________________________________________________________________
+decoder_stage2_bn1 (BatchNormal (None, 32, 80, 32)   128         decoder_stage2_conv1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage2_relu1 (Activatio (None, 32, 80, 32)   0           decoder_stage2_bn1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage2_upsample2 (UpSam (None, 64, 160, 32)  0           decoder_stage2_relu1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage2_conv2 (Conv2D)   (None, 64, 160, 32)  9216        decoder_stage2_upsample2[0][0]   
+__________________________________________________________________________________________________
+decoder_stage2_bn2 (BatchNormal (None, 64, 160, 32)  128         decoder_stage2_conv2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage2_relu2 (Activatio (None, 64, 160, 32)  0           decoder_stage2_bn2[0][0]         
+__________________________________________________________________________________________________
+decoder_stage2_conv3 (Conv2D)   (None, 64, 160, 64)  2048        decoder_stage2_relu2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage2_bn3 (BatchNormal (None, 64, 160, 64)  256         decoder_stage2_conv3[0][0]       
+__________________________________________________________________________________________________
+decoder_stage2_relu3 (Activatio (None, 64, 160, 64)  0           decoder_stage2_bn3[0][0]         
+__________________________________________________________________________________________________
+add_11 (Add)                    (None, 64, 160, 64)  0           decoder_stage2_relu3[0][0]       
+                                                                 stage2_unit1_relu1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage3_conv1 (Conv2D)   (None, 64, 160, 16)  1024        add_11[0][0]                     
+__________________________________________________________________________________________________
+decoder_stage3_bn1 (BatchNormal (None, 64, 160, 16)  64          decoder_stage3_conv1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage3_relu1 (Activatio (None, 64, 160, 16)  0           decoder_stage3_bn1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage3_upsample2 (UpSam (None, 128, 320, 16) 0           decoder_stage3_relu1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage3_conv2 (Conv2D)   (None, 128, 320, 16) 2304        decoder_stage3_upsample2[0][0]   
+__________________________________________________________________________________________________
+decoder_stage3_bn2 (BatchNormal (None, 128, 320, 16) 64          decoder_stage3_conv2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage3_relu2 (Activatio (None, 128, 320, 16) 0           decoder_stage3_bn2[0][0]         
+__________________________________________________________________________________________________
+decoder_stage3_conv3 (Conv2D)   (None, 128, 320, 64) 1024        decoder_stage3_relu2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage3_bn3 (BatchNormal (None, 128, 320, 64) 256         decoder_stage3_conv3[0][0]       
+__________________________________________________________________________________________________
+decoder_stage3_relu3 (Activatio (None, 128, 320, 64) 0           decoder_stage3_bn3[0][0]         
+__________________________________________________________________________________________________
+add_12 (Add)                    (None, 128, 320, 64) 0           decoder_stage3_relu3[0][0]       
+                                                                 relu0[0][0]                      
+__________________________________________________________________________________________________
+decoder_stage4_conv1 (Conv2D)   (None, 128, 320, 16) 1024        add_12[0][0]                     
+__________________________________________________________________________________________________
+decoder_stage4_bn1 (BatchNormal (None, 128, 320, 16) 64          decoder_stage4_conv1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage4_relu1 (Activatio (None, 128, 320, 16) 0           decoder_stage4_bn1[0][0]         
+__________________________________________________________________________________________________
+decoder_stage4_upsample2 (UpSam (None, 256, 640, 16) 0           decoder_stage4_relu1[0][0]       
+__________________________________________________________________________________________________
+decoder_stage4_conv2 (Conv2D)   (None, 256, 640, 16) 2304        decoder_stage4_upsample2[0][0]   
+__________________________________________________________________________________________________
+decoder_stage4_bn2 (BatchNormal (None, 256, 640, 16) 64          decoder_stage4_conv2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage4_relu2 (Activatio (None, 256, 640, 16) 0           decoder_stage4_bn2[0][0]         
+__________________________________________________________________________________________________
+decoder_stage4_conv3 (Conv2D)   (None, 256, 640, 16) 256         decoder_stage4_relu2[0][0]       
+__________________________________________________________________________________________________
+decoder_stage4_bn3 (BatchNormal (None, 256, 640, 16) 64          decoder_stage4_conv3[0][0]       
+__________________________________________________________________________________________________
+decoder_stage4_relu3 (Activatio (None, 256, 640, 16) 0           decoder_stage4_bn3[0][0]         
+__________________________________________________________________________________________________
+final_conv (Conv2D)             (None, 256, 640, 3)  435         decoder_stage4_relu3[0][0]       
+__________________________________________________________________________________________________
+softmax (Activation)            (None, 256, 640, 3)  0           final_conv[0][0]                 
+==================================================================================================
+Total params: 11,521,980
+Trainable params: 11,511,958
+Non-trainable params: 10,022
+__________________________________________________________________________________________________
+Optimizer: <keras.optimizers.Adam object at 0x7fb7fc54d668>, learning rate: 0.0001, loss: [<function dice_fp_penalty_loss at 0x7fb93cd23d90>], metrics: ['categorical_accuracy']
+
+Callbacks: [<keras.callbacks.ReduceLROnPlateau object at 0x7fb93ccaf320>, <keras.callbacks.EarlyStopping object at 0x7fb93ccaf898>, <keras.callbacks.TensorBoard object at 0x7fb93cce0c88>, <callbacks.telegram_callback.TelegramCallback object at 0x7fb93cd99390>, <keras.callbacks.CSVLogger object at 0x7fb93ccaf978>, <keras.callbacks.ModelCheckpoint object at 0x7fb93ccbdac8>]
+
+Steps per epoch: 894
+Starting training...
+
+Epoch 1/1000
+ - 69s - loss: 0.8581 - categorical_accuracy: 0.8097
+
+Epoch 00001: loss improved from inf to 0.85805, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 2/1000
+ - 65s - loss: 0.6723 - categorical_accuracy: 0.8531
+
+Epoch 00002: loss improved from 0.85805 to 0.67228, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 3/1000
+ - 64s - loss: 0.6310 - categorical_accuracy: 0.8614
+
+Epoch 00003: loss improved from 0.67228 to 0.63100, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 4/1000
+ - 63s - loss: 0.5649 - categorical_accuracy: 0.8712
+
+Epoch 00004: loss improved from 0.63100 to 0.56488, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 5/1000
+ - 64s - loss: 0.5121 - categorical_accuracy: 0.8731
+
+Epoch 00005: loss improved from 0.56488 to 0.51210, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 6/1000
+ - 64s - loss: 0.4649 - categorical_accuracy: 0.8833
+
+Epoch 00006: loss improved from 0.51210 to 0.46491, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 7/1000
+ - 64s - loss: 0.4119 - categorical_accuracy: 0.8918
+
+Epoch 00007: loss improved from 0.46491 to 0.41192, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 8/1000
+ - 65s - loss: 0.3886 - categorical_accuracy: 0.8943
+
+Epoch 00008: loss improved from 0.41192 to 0.38859, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 9/1000
+ - 64s - loss: 0.3710 - categorical_accuracy: 0.8991
+
+Epoch 00009: loss improved from 0.38859 to 0.37101, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 10/1000
+ - 64s - loss: 0.3394 - categorical_accuracy: 0.9066
+
+Epoch 00010: loss improved from 0.37101 to 0.33940, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 11/1000
+ - 64s - loss: 0.3208 - categorical_accuracy: 0.9100
+
+Epoch 00011: loss improved from 0.33940 to 0.32076, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 12/1000
+ - 64s - loss: 0.3043 - categorical_accuracy: 0.9133
+
+Epoch 00012: loss improved from 0.32076 to 0.30434, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 13/1000
+ - 64s - loss: 0.3162 - categorical_accuracy: 0.9105
+
+Epoch 00013: loss did not improve from 0.30434
+Epoch 14/1000
+ - 65s - loss: 0.2829 - categorical_accuracy: 0.9182
+
+Epoch 00014: loss improved from 0.30434 to 0.28286, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 15/1000
+ - 63s - loss: 0.2590 - categorical_accuracy: 0.9226
+
+Epoch 00015: loss improved from 0.28286 to 0.25898, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 16/1000
+ - 62s - loss: 0.2663 - categorical_accuracy: 0.9215
+
+Epoch 00016: loss did not improve from 0.25898
+Epoch 17/1000
+ - 62s - loss: 0.2547 - categorical_accuracy: 0.9230
+
+Epoch 00017: loss improved from 0.25898 to 0.25473, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 18/1000
+ - 62s - loss: 0.2317 - categorical_accuracy: 0.9288
+
+Epoch 00018: loss improved from 0.25473 to 0.23172, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 19/1000
+ - 62s - loss: 0.2387 - categorical_accuracy: 0.9265
+
+Epoch 00019: loss did not improve from 0.23172
+Epoch 20/1000
+ - 62s - loss: 0.2418 - categorical_accuracy: 0.9264
+
+Epoch 00020: loss did not improve from 0.23172
+Epoch 21/1000
+ - 62s - loss: 0.2216 - categorical_accuracy: 0.9310
+
+Epoch 00021: loss improved from 0.23172 to 0.22160, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 22/1000
+ - 62s - loss: 0.2058 - categorical_accuracy: 0.9354
+
+Epoch 00022: loss improved from 0.22160 to 0.20580, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 23/1000
+ - 62s - loss: 0.2041 - categorical_accuracy: 0.9354
+
+Epoch 00023: loss improved from 0.20580 to 0.20407, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 24/1000
+ - 62s - loss: 0.2011 - categorical_accuracy: 0.9373
+
+Epoch 00024: loss improved from 0.20407 to 0.20115, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 25/1000
+ - 63s - loss: 0.2020 - categorical_accuracy: 0.9365
+
+Epoch 00025: loss did not improve from 0.20115
+Epoch 26/1000
+ - 62s - loss: 0.2077 - categorical_accuracy: 0.9352
+
+Epoch 00026: loss did not improve from 0.20115
+Epoch 27/1000
+ - 62s - loss: 0.2054 - categorical_accuracy: 0.9357
+
+Epoch 00027: loss did not improve from 0.20115
+Epoch 28/1000
+ - 62s - loss: 0.1777 - categorical_accuracy: 0.9426
+
+Epoch 00028: loss improved from 0.20115 to 0.17768, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 29/1000
+ - 62s - loss: 0.1810 - categorical_accuracy: 0.9422
+
+Epoch 00029: loss did not improve from 0.17768
+Epoch 30/1000
+ - 62s - loss: 0.1881 - categorical_accuracy: 0.9405
+
+Epoch 00030: loss did not improve from 0.17768
+Epoch 31/1000
+ - 62s - loss: 0.1761 - categorical_accuracy: 0.9439
+
+Epoch 00031: loss improved from 0.17768 to 0.17610, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 32/1000
+ - 62s - loss: 0.1797 - categorical_accuracy: 0.9424
+
+Epoch 00032: loss did not improve from 0.17610
+Epoch 33/1000
+ - 62s - loss: 0.1696 - categorical_accuracy: 0.9450
+
+Epoch 00033: loss improved from 0.17610 to 0.16961, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 34/1000
+ - 62s - loss: 0.1624 - categorical_accuracy: 0.9467
+
+Epoch 00034: loss improved from 0.16961 to 0.16245, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 35/1000
+ - 62s - loss: 0.1831 - categorical_accuracy: 0.9418
+
+Epoch 00035: loss did not improve from 0.16245
+Epoch 36/1000
+ - 61s - loss: 0.1645 - categorical_accuracy: 0.9458
+
+Epoch 00036: loss did not improve from 0.16245
+Epoch 37/1000
+ - 61s - loss: 0.1502 - categorical_accuracy: 0.9500
+
+Epoch 00037: loss improved from 0.16245 to 0.15025, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 38/1000
+ - 62s - loss: 0.1491 - categorical_accuracy: 0.9503
+
+Epoch 00038: loss improved from 0.15025 to 0.14910, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 39/1000
+ - 62s - loss: 0.1524 - categorical_accuracy: 0.9491
+
+Epoch 00039: loss did not improve from 0.14910
+Epoch 40/1000
+ - 62s - loss: 0.1596 - categorical_accuracy: 0.9472
+
+Epoch 00040: loss did not improve from 0.14910
+Epoch 41/1000
+ - 62s - loss: 0.1435 - categorical_accuracy: 0.9514
+
+Epoch 00041: loss improved from 0.14910 to 0.14345, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 42/1000
+ - 62s - loss: 0.1401 - categorical_accuracy: 0.9524
+
+Epoch 00042: loss improved from 0.14345 to 0.14011, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 43/1000
+ - 62s - loss: 0.1460 - categorical_accuracy: 0.9507
+
+Epoch 00043: loss did not improve from 0.14011
+Epoch 44/1000
+ - 61s - loss: 0.1432 - categorical_accuracy: 0.9513
+
+Epoch 00044: loss did not improve from 0.14011
+Epoch 45/1000
+ - 61s - loss: 0.1551 - categorical_accuracy: 0.9484
+
+Epoch 00045: loss did not improve from 0.14011
+Epoch 46/1000
+ - 61s - loss: 0.1367 - categorical_accuracy: 0.9534
+
+Epoch 00046: loss improved from 0.14011 to 0.13671, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 47/1000
+ - 62s - loss: 0.1280 - categorical_accuracy: 0.9559
+
+Epoch 00047: loss improved from 0.13671 to 0.12803, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 48/1000
+ - 62s - loss: 0.1292 - categorical_accuracy: 0.9557
+
+Epoch 00048: loss did not improve from 0.12803
+Epoch 49/1000
+ - 61s - loss: 0.1348 - categorical_accuracy: 0.9541
+
+Epoch 00049: loss did not improve from 0.12803
+Epoch 50/1000
+ - 61s - loss: 0.1425 - categorical_accuracy: 0.9520
+
+Epoch 00050: loss did not improve from 0.12803
+Epoch 51/1000
+ - 61s - loss: 0.1285 - categorical_accuracy: 0.9558
+
+Epoch 00051: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
+
+Epoch 00051: loss did not improve from 0.12803
+Epoch 52/1000
+ - 60s - loss: 0.1181 - categorical_accuracy: 0.9588
+
+Epoch 00052: loss improved from 0.12803 to 0.11809, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 53/1000
+ - 60s - loss: 0.1107 - categorical_accuracy: 0.9610
+
+Epoch 00053: loss improved from 0.11809 to 0.11069, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 54/1000
+ - 60s - loss: 0.1091 - categorical_accuracy: 0.9615
+
+Epoch 00054: loss improved from 0.11069 to 0.10910, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 55/1000
+ - 61s - loss: 0.1095 - categorical_accuracy: 0.9616
+
+Epoch 00055: loss did not improve from 0.10910
+Epoch 56/1000
+ - 61s - loss: 0.1059 - categorical_accuracy: 0.9625
+
+Epoch 00056: loss improved from 0.10910 to 0.10586, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 57/1000
+ - 61s - loss: 0.1039 - categorical_accuracy: 0.9629
+
+Epoch 00057: loss improved from 0.10586 to 0.10391, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 58/1000
+ - 60s - loss: 0.1037 - categorical_accuracy: 0.9627
+
+Epoch 00058: loss improved from 0.10391 to 0.10374, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 59/1000
+ - 61s - loss: 0.1022 - categorical_accuracy: 0.9630
+
+Epoch 00059: loss improved from 0.10374 to 0.10221, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 60/1000
+ - 61s - loss: 0.1005 - categorical_accuracy: 0.9636
+
+Epoch 00060: loss improved from 0.10221 to 0.10049, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 61/1000
+ - 61s - loss: 0.1029 - categorical_accuracy: 0.9629
+
+Epoch 00061: loss did not improve from 0.10049
+Epoch 62/1000
+ - 61s - loss: 0.1020 - categorical_accuracy: 0.9633
+
+Epoch 00062: loss did not improve from 0.10049
+Epoch 63/1000
+ - 61s - loss: 0.1017 - categorical_accuracy: 0.9634
+
+Epoch 00063: loss did not improve from 0.10049
+Epoch 64/1000
+ - 61s - loss: 0.1012 - categorical_accuracy: 0.9635
+
+Epoch 00064: ReduceLROnPlateau reducing learning rate to 2.499999936844688e-05.
+
+Epoch 00064: loss did not improve from 0.10049
+Epoch 65/1000
+ - 61s - loss: 0.0927 - categorical_accuracy: 0.9659
+
+Epoch 00065: loss improved from 0.10049 to 0.09271, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 66/1000
+ - 61s - loss: 0.0875 - categorical_accuracy: 0.9676
+
+Epoch 00066: loss improved from 0.09271 to 0.08746, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 67/1000
+ - 61s - loss: 0.0867 - categorical_accuracy: 0.9679
+
+Epoch 00067: loss improved from 0.08746 to 0.08673, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 68/1000
+ - 60s - loss: 0.0870 - categorical_accuracy: 0.9680
+
+Epoch 00068: loss did not improve from 0.08673
+Epoch 69/1000
+ - 60s - loss: 0.0840 - categorical_accuracy: 0.9688
+
+Epoch 00069: loss improved from 0.08673 to 0.08403, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 70/1000
+ - 61s - loss: 0.0845 - categorical_accuracy: 0.9689
+
+Epoch 00070: loss did not improve from 0.08403
+Epoch 71/1000
+ - 61s - loss: 0.0841 - categorical_accuracy: 0.9690
+
+Epoch 00071: loss did not improve from 0.08403
+Epoch 72/1000
+ - 61s - loss: 0.0841 - categorical_accuracy: 0.9690
+
+Epoch 00072: loss did not improve from 0.08403
+Epoch 73/1000
+ - 60s - loss: 0.0836 - categorical_accuracy: 0.9692
+
+Epoch 00073: loss improved from 0.08403 to 0.08359, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 74/1000
+ - 61s - loss: 0.0832 - categorical_accuracy: 0.9694
+
+Epoch 00074: loss improved from 0.08359 to 0.08320, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 75/1000
+ - 61s - loss: 0.0814 - categorical_accuracy: 0.9699
+
+Epoch 00075: loss improved from 0.08320 to 0.08135, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 76/1000
+ - 61s - loss: 0.0823 - categorical_accuracy: 0.9698
+
+Epoch 00076: loss did not improve from 0.08135
+Epoch 77/1000
+ - 61s - loss: 0.0809 - categorical_accuracy: 0.9702
+
+Epoch 00077: loss improved from 0.08135 to 0.08094, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 78/1000
+ - 61s - loss: 0.0800 - categorical_accuracy: 0.9705
+
+Epoch 00078: loss improved from 0.08094 to 0.07998, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 79/1000
+ - 61s - loss: 0.0804 - categorical_accuracy: 0.9703
+
+Epoch 00079: loss did not improve from 0.07998
+Epoch 80/1000
+ - 61s - loss: 0.0810 - categorical_accuracy: 0.9704
+
+Epoch 00080: loss did not improve from 0.07998
+Epoch 81/1000
+ - 61s - loss: 0.0804 - categorical_accuracy: 0.9704
+
+Epoch 00081: loss did not improve from 0.07998
+Epoch 82/1000
+ - 61s - loss: 0.0792 - categorical_accuracy: 0.9708
+
+Epoch 00082: loss improved from 0.07998 to 0.07920, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 83/1000
+ - 61s - loss: 0.0787 - categorical_accuracy: 0.9709
+
+Epoch 00083: loss improved from 0.07920 to 0.07872, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 84/1000
+ - 61s - loss: 0.0793 - categorical_accuracy: 0.9708
+
+Epoch 00084: loss did not improve from 0.07872
+Epoch 85/1000
+ - 61s - loss: 0.0787 - categorical_accuracy: 0.9710
+
+Epoch 00085: loss improved from 0.07872 to 0.07865, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 86/1000
+ - 60s - loss: 0.0772 - categorical_accuracy: 0.9714
+
+Epoch 00086: loss improved from 0.07865 to 0.07724, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 87/1000
+ - 61s - loss: 0.0781 - categorical_accuracy: 0.9711
+
+Epoch 00087: loss did not improve from 0.07724
+Epoch 88/1000
+ - 62s - loss: 0.0776 - categorical_accuracy: 0.9713
+
+Epoch 00088: loss did not improve from 0.07724
+Epoch 89/1000
+ - 64s - loss: 0.0769 - categorical_accuracy: 0.9715
+
+Epoch 00089: loss improved from 0.07724 to 0.07689, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 90/1000
+ - 71s - loss: 0.0766 - categorical_accuracy: 0.9714
+
+Epoch 00090: loss improved from 0.07689 to 0.07662, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 91/1000
+ - 70s - loss: 0.0772 - categorical_accuracy: 0.9711
+
+Epoch 00091: loss did not improve from 0.07662
+Epoch 92/1000
+ - 69s - loss: 0.0765 - categorical_accuracy: 0.9714
+
+Epoch 00092: loss improved from 0.07662 to 0.07647, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 93/1000
+ - 65s - loss: 0.0761 - categorical_accuracy: 0.9715
+
+Epoch 00093: loss improved from 0.07647 to 0.07615, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 94/1000
+ - 63s - loss: 0.0757 - categorical_accuracy: 0.9717
+
+Epoch 00094: loss improved from 0.07615 to 0.07570, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 95/1000
+ - 66s - loss: 0.0772 - categorical_accuracy: 0.9713
+
+Epoch 00095: loss did not improve from 0.07570
+Epoch 96/1000
+ - 67s - loss: 0.0757 - categorical_accuracy: 0.9715
+
+Epoch 00096: loss improved from 0.07570 to 0.07565, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 97/1000
+ - 67s - loss: 0.0741 - categorical_accuracy: 0.9720
+
+Epoch 00097: loss improved from 0.07565 to 0.07405, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 98/1000
+ - 68s - loss: 0.0734 - categorical_accuracy: 0.9723
+
+Epoch 00098: loss improved from 0.07405 to 0.07342, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 99/1000
+ - 67s - loss: 0.0738 - categorical_accuracy: 0.9723
+
+Epoch 00099: loss did not improve from 0.07342
+Epoch 100/1000
+ - 65s - loss: 0.0741 - categorical_accuracy: 0.9722
+
+Epoch 00100: loss did not improve from 0.07342
+Epoch 101/1000
+ - 66s - loss: 0.0733 - categorical_accuracy: 0.9724
+
+Epoch 00101: loss improved from 0.07342 to 0.07328, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 102/1000
+ - 62s - loss: 0.0732 - categorical_accuracy: 0.9724
+
+Epoch 00102: loss improved from 0.07328 to 0.07324, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 103/1000
+ - 62s - loss: 0.0745 - categorical_accuracy: 0.9720
+
+Epoch 00103: loss did not improve from 0.07324
+Epoch 104/1000
+ - 61s - loss: 0.0761 - categorical_accuracy: 0.9718
+
+Epoch 00104: loss did not improve from 0.07324
+Epoch 105/1000
+ - 61s - loss: 0.0735 - categorical_accuracy: 0.9723
+
+Epoch 00105: ReduceLROnPlateau reducing learning rate to 1.249999968422344e-05.
+
+Epoch 00105: loss did not improve from 0.07324
+Epoch 106/1000
+ - 62s - loss: 0.0715 - categorical_accuracy: 0.9730
+
+Epoch 00106: loss improved from 0.07324 to 0.07148, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 107/1000
+ - 61s - loss: 0.0693 - categorical_accuracy: 0.9737
+
+Epoch 00107: loss improved from 0.07148 to 0.06934, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 108/1000
+ - 61s - loss: 0.0682 - categorical_accuracy: 0.9741
+
+Epoch 00108: loss improved from 0.06934 to 0.06816, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 109/1000
+ - 61s - loss: 0.0677 - categorical_accuracy: 0.9742
+
+Epoch 00109: loss improved from 0.06816 to 0.06767, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 110/1000
+ - 61s - loss: 0.0674 - categorical_accuracy: 0.9744
+
+Epoch 00110: loss improved from 0.06767 to 0.06745, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 111/1000
+ - 61s - loss: 0.0671 - categorical_accuracy: 0.9744
+
+Epoch 00111: loss improved from 0.06745 to 0.06711, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 112/1000
+ - 61s - loss: 0.0671 - categorical_accuracy: 0.9745
+
+Epoch 00112: loss improved from 0.06711 to 0.06706, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 113/1000
+ - 61s - loss: 0.0666 - categorical_accuracy: 0.9746
+
+Epoch 00113: loss improved from 0.06706 to 0.06663, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 114/1000
+ - 61s - loss: 0.0662 - categorical_accuracy: 0.9748
+
+Epoch 00114: loss improved from 0.06663 to 0.06615, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 115/1000
+ - 61s - loss: 0.0663 - categorical_accuracy: 0.9748
+
+Epoch 00115: loss did not improve from 0.06615
+Epoch 116/1000
+ - 61s - loss: 0.0664 - categorical_accuracy: 0.9748
+
+Epoch 00116: loss did not improve from 0.06615
+Epoch 117/1000
+ - 61s - loss: 0.0659 - categorical_accuracy: 0.9749
+
+Epoch 00117: loss improved from 0.06615 to 0.06590, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 118/1000
+ - 62s - loss: 0.0661 - categorical_accuracy: 0.9749
+
+Epoch 00118: loss did not improve from 0.06590
+Epoch 119/1000
+ - 61s - loss: 0.0652 - categorical_accuracy: 0.9751
+
+Epoch 00119: loss improved from 0.06590 to 0.06522, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 120/1000
+ - 61s - loss: 0.0647 - categorical_accuracy: 0.9753
+
+Epoch 00120: loss improved from 0.06522 to 0.06470, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 121/1000
+ - 61s - loss: 0.0648 - categorical_accuracy: 0.9753
+
+Epoch 00121: loss did not improve from 0.06470
+Epoch 122/1000
+ - 60s - loss: 0.0654 - categorical_accuracy: 0.9751
+
+Epoch 00122: loss did not improve from 0.06470
+Epoch 123/1000
+ - 61s - loss: 0.0653 - categorical_accuracy: 0.9752
+
+Epoch 00123: loss did not improve from 0.06470
+Epoch 124/1000
+ - 61s - loss: 0.0649 - categorical_accuracy: 0.9752
+
+Epoch 00124: ReduceLROnPlateau reducing learning rate to 6.24999984211172e-06.
+
+Epoch 00124: loss did not improve from 0.06470
+Epoch 125/1000
+ - 61s - loss: 0.0646 - categorical_accuracy: 0.9754
+
+Epoch 00125: loss improved from 0.06470 to 0.06459, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 126/1000
+ - 61s - loss: 0.0634 - categorical_accuracy: 0.9758
+
+Epoch 00126: loss improved from 0.06459 to 0.06335, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 127/1000
+ - 61s - loss: 0.0630 - categorical_accuracy: 0.9759
+
+Epoch 00127: loss improved from 0.06335 to 0.06298, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 128/1000
+ - 61s - loss: 0.0626 - categorical_accuracy: 0.9760
+
+Epoch 00128: loss improved from 0.06298 to 0.06256, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 129/1000
+ - 61s - loss: 0.0628 - categorical_accuracy: 0.9760
+
+Epoch 00129: loss did not improve from 0.06256
+Epoch 130/1000
+ - 61s - loss: 0.0623 - categorical_accuracy: 0.9762
+
+Epoch 00130: loss improved from 0.06256 to 0.06231, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 131/1000
+ - 61s - loss: 0.0622 - categorical_accuracy: 0.9762
+
+Epoch 00131: loss improved from 0.06231 to 0.06217, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 132/1000
+ - 61s - loss: 0.0620 - categorical_accuracy: 0.9763
+
+Epoch 00132: loss improved from 0.06217 to 0.06200, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 133/1000
+ - 61s - loss: 0.0620 - categorical_accuracy: 0.9763
+
+Epoch 00133: loss improved from 0.06200 to 0.06197, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 134/1000
+ - 61s - loss: 0.0618 - categorical_accuracy: 0.9763
+
+Epoch 00134: loss improved from 0.06197 to 0.06184, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 135/1000
+ - 61s - loss: 0.0618 - categorical_accuracy: 0.9764
+
+Epoch 00135: loss improved from 0.06184 to 0.06182, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 136/1000
+ - 61s - loss: 0.0617 - categorical_accuracy: 0.9764
+
+Epoch 00136: loss improved from 0.06182 to 0.06173, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 137/1000
+ - 61s - loss: 0.0616 - categorical_accuracy: 0.9764
+
+Epoch 00137: loss improved from 0.06173 to 0.06157, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 138/1000
+ - 61s - loss: 0.0614 - categorical_accuracy: 0.9765
+
+Epoch 00138: loss improved from 0.06157 to 0.06140, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 139/1000
+ - 61s - loss: 0.0614 - categorical_accuracy: 0.9765
+
+Epoch 00139: loss did not improve from 0.06140
+Epoch 140/1000
+ - 61s - loss: 0.0613 - categorical_accuracy: 0.9765
+
+Epoch 00140: loss improved from 0.06140 to 0.06134, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 141/1000
+ - 61s - loss: 0.0611 - categorical_accuracy: 0.9766
+
+Epoch 00141: loss improved from 0.06134 to 0.06111, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 142/1000
+ - 61s - loss: 0.0610 - categorical_accuracy: 0.9766
+
+Epoch 00142: loss improved from 0.06111 to 0.06097, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 143/1000
+ - 61s - loss: 0.0609 - categorical_accuracy: 0.9767
+
+Epoch 00143: loss improved from 0.06097 to 0.06085, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 144/1000
+ - 61s - loss: 0.0608 - categorical_accuracy: 0.9767
+
+Epoch 00144: loss improved from 0.06085 to 0.06078, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 145/1000
+ - 61s - loss: 0.0607 - categorical_accuracy: 0.9767
+
+Epoch 00145: loss improved from 0.06078 to 0.06067, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 146/1000
+ - 61s - loss: 0.0608 - categorical_accuracy: 0.9768
+
+Epoch 00146: loss did not improve from 0.06067
+Epoch 147/1000
+ - 61s - loss: 0.0608 - categorical_accuracy: 0.9767
+
+Epoch 00147: loss did not improve from 0.06067
+Epoch 148/1000
+ - 61s - loss: 0.0607 - categorical_accuracy: 0.9768
+
+Epoch 00148: loss did not improve from 0.06067
+Epoch 149/1000
+ - 61s - loss: 0.0605 - categorical_accuracy: 0.9768
+
+Epoch 00149: loss improved from 0.06067 to 0.06048, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 150/1000
+ - 61s - loss: 0.0604 - categorical_accuracy: 0.9769
+
+Epoch 00150: loss improved from 0.06048 to 0.06040, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 151/1000
+ - 61s - loss: 0.0605 - categorical_accuracy: 0.9768
+
+Epoch 00151: loss did not improve from 0.06040
+Epoch 152/1000
+ - 61s - loss: 0.0604 - categorical_accuracy: 0.9769
+
+Epoch 00152: loss did not improve from 0.06040
+Epoch 153/1000
+ - 60s - loss: 0.0602 - categorical_accuracy: 0.9769
+
+Epoch 00153: loss improved from 0.06040 to 0.06025, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 154/1000
+ - 61s - loss: 0.0601 - categorical_accuracy: 0.9770
+
+Epoch 00154: loss improved from 0.06025 to 0.06012, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 155/1000
+ - 61s - loss: 0.0603 - categorical_accuracy: 0.9769
+
+Epoch 00155: loss did not improve from 0.06012
+Epoch 156/1000
+ - 61s - loss: 0.0600 - categorical_accuracy: 0.9770
+
+Epoch 00156: loss improved from 0.06012 to 0.06004, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 157/1000
+ - 61s - loss: 0.0602 - categorical_accuracy: 0.9770
+
+Epoch 00157: loss did not improve from 0.06004
+Epoch 158/1000
+ - 61s - loss: 0.0603 - categorical_accuracy: 0.9769
+
+Epoch 00158: ReduceLROnPlateau reducing learning rate to 3.12499992105586e-06.
+
+Epoch 00158: loss did not improve from 0.06004
+Epoch 159/1000
+ - 61s - loss: 0.0597 - categorical_accuracy: 0.9771
+
+Epoch 00159: loss improved from 0.06004 to 0.05969, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 160/1000
+ - 61s - loss: 0.0594 - categorical_accuracy: 0.9772
+
+Epoch 00160: loss improved from 0.05969 to 0.05943, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 161/1000
+ - 61s - loss: 0.0592 - categorical_accuracy: 0.9773
+
+Epoch 00161: loss improved from 0.05943 to 0.05923, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 162/1000
+ - 61s - loss: 0.0592 - categorical_accuracy: 0.9773
+
+Epoch 00162: loss did not improve from 0.05923
+Epoch 163/1000
+ - 61s - loss: 0.0592 - categorical_accuracy: 0.9773
+
+Epoch 00163: loss improved from 0.05923 to 0.05918, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 164/1000
+ - 61s - loss: 0.0592 - categorical_accuracy: 0.9773
+
+Epoch 00164: loss did not improve from 0.05918
+Epoch 165/1000
+ - 61s - loss: 0.0591 - categorical_accuracy: 0.9773
+
+Epoch 00165: loss improved from 0.05918 to 0.05907, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 166/1000
+ - 61s - loss: 0.0590 - categorical_accuracy: 0.9774
+
+Epoch 00166: loss improved from 0.05907 to 0.05896, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 167/1000
+ - 61s - loss: 0.0590 - categorical_accuracy: 0.9774
+
+Epoch 00167: loss did not improve from 0.05896
+Epoch 168/1000
+ - 61s - loss: 0.0588 - categorical_accuracy: 0.9774
+
+Epoch 00168: loss improved from 0.05896 to 0.05883, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 169/1000
+ - 61s - loss: 0.0587 - categorical_accuracy: 0.9774
+
+Epoch 00169: loss improved from 0.05883 to 0.05874, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 170/1000
+ - 61s - loss: 0.0588 - categorical_accuracy: 0.9774
+
+Epoch 00170: loss did not improve from 0.05874
+Epoch 171/1000
+ - 61s - loss: 0.0587 - categorical_accuracy: 0.9774
+
+Epoch 00171: loss improved from 0.05874 to 0.05872, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 172/1000
+ - 61s - loss: 0.0587 - categorical_accuracy: 0.9775
+
+Epoch 00172: loss did not improve from 0.05872
+Epoch 173/1000
+ - 61s - loss: 0.0586 - categorical_accuracy: 0.9775
+
+Epoch 00173: loss improved from 0.05872 to 0.05863, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 174/1000
+ - 62s - loss: 0.0585 - categorical_accuracy: 0.9775
+
+Epoch 00174: loss improved from 0.05863 to 0.05852, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 175/1000
+ - 62s - loss: 0.0584 - categorical_accuracy: 0.9775
+
+Epoch 00175: loss improved from 0.05852 to 0.05836, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 176/1000
+ - 62s - loss: 0.0584 - categorical_accuracy: 0.9775
+
+Epoch 00176: loss did not improve from 0.05836
+Epoch 177/1000
+ - 62s - loss: 0.0584 - categorical_accuracy: 0.9776
+
+Epoch 00177: loss did not improve from 0.05836
+Epoch 178/1000
+ - 63s - loss: 0.0582 - categorical_accuracy: 0.9776
+
+Epoch 00178: loss improved from 0.05836 to 0.05820, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 179/1000
+ - 62s - loss: 0.0583 - categorical_accuracy: 0.9776
+
+Epoch 00179: loss did not improve from 0.05820
+Epoch 180/1000
+ - 62s - loss: 0.0581 - categorical_accuracy: 0.9776
+
+Epoch 00180: loss improved from 0.05820 to 0.05808, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 181/1000
+ - 62s - loss: 0.0582 - categorical_accuracy: 0.9776
+
+Epoch 00181: loss did not improve from 0.05808
+Epoch 182/1000
+ - 62s - loss: 0.0581 - categorical_accuracy: 0.9777
+
+Epoch 00182: loss did not improve from 0.05808
+Epoch 183/1000
+ - 62s - loss: 0.0580 - categorical_accuracy: 0.9777
+
+Epoch 00183: loss improved from 0.05808 to 0.05797, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 184/1000
+ - 63s - loss: 0.0580 - categorical_accuracy: 0.9777
+
+Epoch 00184: loss did not improve from 0.05797
+Epoch 185/1000
+ - 62s - loss: 0.0580 - categorical_accuracy: 0.9777
+
+Epoch 00185: loss did not improve from 0.05797
+Epoch 186/1000
+ - 63s - loss: 0.0580 - categorical_accuracy: 0.9777
+
+Epoch 00186: loss improved from 0.05797 to 0.05796, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 187/1000
+ - 62s - loss: 0.0579 - categorical_accuracy: 0.9777
+
+Epoch 00187: ReduceLROnPlateau reducing learning rate to 1.56249996052793e-06.
+
+Epoch 00187: loss improved from 0.05796 to 0.05791, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 188/1000
+ - 62s - loss: 0.0578 - categorical_accuracy: 0.9778
+
+Epoch 00188: loss improved from 0.05791 to 0.05777, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 189/1000
+ - 63s - loss: 0.0577 - categorical_accuracy: 0.9778
+
+Epoch 00189: loss improved from 0.05777 to 0.05769, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 190/1000
+ - 63s - loss: 0.0576 - categorical_accuracy: 0.9778
+
+Epoch 00190: loss improved from 0.05769 to 0.05763, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 191/1000
+ - 63s - loss: 0.0576 - categorical_accuracy: 0.9778
+
+Epoch 00191: loss improved from 0.05763 to 0.05761, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 192/1000
+ - 62s - loss: 0.0575 - categorical_accuracy: 0.9778
+
+Epoch 00192: loss improved from 0.05761 to 0.05749, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 193/1000
+ - 62s - loss: 0.0575 - categorical_accuracy: 0.9778
+
+Epoch 00193: loss did not improve from 0.05749
+Epoch 194/1000
+ - 62s - loss: 0.0576 - categorical_accuracy: 0.9779
+
+Epoch 00194: loss did not improve from 0.05749
+Epoch 195/1000
+ - 63s - loss: 0.0574 - categorical_accuracy: 0.9779
+
+Epoch 00195: loss improved from 0.05749 to 0.05739, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 196/1000
+ - 63s - loss: 0.0574 - categorical_accuracy: 0.9779
+
+Epoch 00196: loss improved from 0.05739 to 0.05737, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 197/1000
+ - 62s - loss: 0.0573 - categorical_accuracy: 0.9779
+
+Epoch 00197: loss improved from 0.05737 to 0.05734, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 198/1000
+ - 63s - loss: 0.0575 - categorical_accuracy: 0.9779
+
+Epoch 00198: loss did not improve from 0.05734
+Epoch 199/1000
+ - 63s - loss: 0.0573 - categorical_accuracy: 0.9779
+
+Epoch 00199: ReduceLROnPlateau reducing learning rate to 7.81249980263965e-07.
+
+Epoch 00199: loss improved from 0.05734 to 0.05731, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 200/1000
+ - 63s - loss: 0.0573 - categorical_accuracy: 0.9779
+
+Epoch 00200: loss did not improve from 0.05731
+Epoch 201/1000
+ - 62s - loss: 0.0572 - categorical_accuracy: 0.9780
+
+Epoch 00201: loss improved from 0.05731 to 0.05718, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 202/1000
+ - 62s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00202: loss improved from 0.05718 to 0.05712, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 203/1000
+ - 64s - loss: 0.0573 - categorical_accuracy: 0.9779
+
+Epoch 00203: loss did not improve from 0.05712
+Epoch 204/1000
+ - 63s - loss: 0.0572 - categorical_accuracy: 0.9780
+
+Epoch 00204: loss did not improve from 0.05712
+Epoch 205/1000
+ - 63s - loss: 0.0572 - categorical_accuracy: 0.9780
+
+Epoch 00205: ReduceLROnPlateau reducing learning rate to 3.906249901319825e-07.
+
+Epoch 00205: loss did not improve from 0.05712
+Epoch 206/1000
+ - 63s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00206: loss improved from 0.05712 to 0.05710, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 207/1000
+ - 63s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00207: loss did not improve from 0.05710
+Epoch 208/1000
+ - 63s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00208: loss did not improve from 0.05710
+Epoch 209/1000
+ - 62s - loss: 0.0572 - categorical_accuracy: 0.9780
+
+Epoch 00209: ReduceLROnPlateau reducing learning rate to 1.9531249506599124e-07.
+
+Epoch 00209: loss did not improve from 0.05710
+Epoch 210/1000
+ - 63s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00210: loss improved from 0.05710 to 0.05710, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 211/1000
+ - 63s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00211: loss did not improve from 0.05710
+Epoch 212/1000
+ - 62s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00212: loss improved from 0.05710 to 0.05706, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 213/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00213: loss improved from 0.05706 to 0.05698, saving model to weights/segmentation/2019-03-31 18-16-31.hdf5
+Epoch 214/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00214: loss did not improve from 0.05698
+Epoch 215/1000
+ - 64s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00215: loss did not improve from 0.05698
+Epoch 216/1000
+ - 62s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00216: ReduceLROnPlateau reducing learning rate to 1e-07.
+
+Epoch 00216: loss did not improve from 0.05698
+Epoch 217/1000
+ - 62s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00217: loss did not improve from 0.05698
+Epoch 218/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00218: loss did not improve from 0.05698
+Epoch 219/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00219: loss did not improve from 0.05698
+Epoch 220/1000
+ - 62s - loss: 0.0571 - categorical_accuracy: 0.9780
+
+Epoch 00220: ReduceLROnPlateau reducing learning rate to 1e-07.
+
+Epoch 00220: loss did not improve from 0.05698
+Epoch 221/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00221: loss did not improve from 0.05698
+Epoch 222/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00222: loss did not improve from 0.05698
+Epoch 223/1000
+ - 63s - loss: 0.0570 - categorical_accuracy: 0.9780
+
+Epoch 00223: loss did not improve from 0.05698
+Epoch 00223: early stopping
+Finished training
+
+Date and time: 2019-03-31 22-08-12
+

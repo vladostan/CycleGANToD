@@ -27,6 +27,37 @@ def dice_coef_multiclass_loss(y_true, y_pred):
     '''
     return 1 - dice_coef_multiclass(y_true, y_pred)
 
+##MYDICE
+def dice_fp_penalty(y_true, y_pred, smooth=1e-7):
+
+    y_true_f = K.flatten(y_true[...,1:])
+    y_pred_f = K.flatten(y_pred[...,1:])
+    intersect = K.sum(y_true_f * y_pred_f, axis=-1)
+    denom = K.sum(y_true_f + y_pred_f, axis=-1)
+    fp = K.sum((1.-y_true_f)*y_pred_f, axis=-1)
+
+    return K.mean((2. * intersect / (denom + 100*fp + smooth)))
+
+def dice_fp_penalty_loss(y_true, y_pred):
+    return 1 - dice_fp_penalty(y_true, y_pred)
+
+######MYDICE
+def dice_fpfn_weighted(y_true, y_pred, smooth=1e-7):
+
+    y_true_f = K.flatten(y_true[...,1:])
+    y_pred_f = K.flatten(y_pred[...,1:])
+    intersect = K.sum(y_true_f * y_pred_f, axis=-1)
+    denom = K.sum(y_true_f + y_pred_f, axis=-1)
+#    tp = K.sum(y_true_f * y_pred_f, axis=-1)
+    fp = K.sum((1.-y_true_f)*y_pred_f, axis=-1)
+    fn = K.sum(y_true_f*(1.-y_pred_f), axis=-1)
+
+    return K.mean((2. * intersect / (denom + 0.5*(fp+fn) + smooth)))
+
+def dice_fpfn_weighted_loss(y_true, y_pred):
+    return 1 - dice_fpfn_weighted(y_true, y_pred)
+
+###############
 def mIU_fp_penalty(y_true, y_pred, smooth=1e-7):
     
     y_true_f = K.flatten(y_true[...,1:])
@@ -36,7 +67,7 @@ def mIU_fp_penalty(y_true, y_pred, smooth=1e-7):
     fp = K.sum((1.-y_true_f)*y_pred_f, axis=-1)
     fn = K.sum(y_true_f*(1.-y_pred_f), axis=-1)
     
-    return K.mean((tp / (tp + 2.*fp + fn + smooth)))
+    return K.mean((tp / (tp + fp + fn + smooth)))
 
 
 def mIU_fp_penalty_loss(y_true, y_pred):    
@@ -58,3 +89,29 @@ def iou_loss_score(y_true, y_pred, smooth=1):
     print(union)
     iou = (intersection + smooth) / ( union + smooth)
     return iou
+
+def dice_iou_loss(y_true, y_pred):
+#    return (iou_loss_score(y_true, y_pred) + dice_coef_multiclass_loss(y_true, y_pred))/2.
+    return 1 - (mIU_fp_penalty(y_true, y_pred) + dice_coef_multiclass(y_true, y_pred))/2.
+
+def dice_iou_conditional_loss(y_true, y_pred):
+    iou = mIU_fp_penalty(y_true, y_pred)
+    dice = dice_coef_multiclass(y_true, y_pred)
+    print(iou)
+#    b =  K.eval(dice)
+#    print(a)
+    return 1 - dice
+#    if a >= b:
+#        return 1 - dice
+#    else:
+#        return 1 - iou
+    
+def dice_iou_weighted_loss(y_true, y_pred):
+    iou = mIU_fp_penalty(y_true, y_pred)
+    dice = dice_coef_multiclass(y_true, y_pred)
+    if iou >= dice:
+        return 
+    else:
+        return 1 - (dice/iou*iou + iou/dice*dice)/2.
+
+#np.median(np.asarray([iou, dice])/sum(np.asarray([iou, dice])))/(np.asarray([iou, dice])/sum(np.asarray([iou, dice])))

@@ -16,13 +16,14 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # In[2]:
 PATH = os.path.abspath('datasets')
 
-losstype = 'myiou'
+losstype = 'mydice'
+vis = False
 
-#imgs_dir = "images"
-#visdir = 'train/'
+imgs_dir = "images"
+visdir = 'train/'
 
-imgs_dir = "trainB"
-visdir = 'test/'
+#imgs_dir = "trainB"
+#visdir = 'test/'
 
 SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/", imgs_dir)]
 
@@ -81,8 +82,8 @@ model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, ac
 #weights_path = "weights/segmentation/CCE/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
 #visdir+='alb/'
 
-#weights_path = "weights/segmentation/CCE/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
-#visdir+='mix/'
+weights_path = "weights/segmentation/CCE/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+visdir+='mix/'
 
 ################### DICE
 #weights_path = "weights/segmentation/dice/2019-03-27 07-55-59.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
@@ -92,9 +93,33 @@ model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, ac
 #weights_path = "weights/segmentation/jaccard/2019-03-27 13-59-56.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
 #visdir+='mix/'
 
-################### JACCARD
-weights_path = "weights/segmentation/myiou/2019-03-28 16-19-29.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
-visdir+='mix/'
+################### MY IOU
+#weights_path = "weights/segmentation/myiou/2019-03-28 16-19-29.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### FOCAL
+#weights_path = "weights/segmentation/focal/2019-03-29 14-44-37.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### My dice: +FP OK
+#weights_path = "weights/segmentation/2019-03-30 11-24-56.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### My dice: +0.1FP WORSE than prev
+#weights_path = "weights/segmentation/2019-03-31 15-53-53.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### My dice: +100FP BAD
+#weights_path = "weights/segmentation/2019-03-31 18-16-31.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### My dice: +0.5*(fp+fn)
+#weights_path = "weights/segmentation/2019-04-01 07-57-37.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
+
+################### (DICE + IOU)/2:
+#weights_path = "weights/segmentation/2019-04-01 11-46-54.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
 
 model.load_weights(weights_path)
 
@@ -105,7 +130,7 @@ model._make_predict_function()
 # In[ ]:
 from keras import optimizers
 from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
-from losses import dice_coef_multiclass_loss, dice_coef_multiclass, mIU_fp_penalty_loss
+from losses import dice_coef_multiclass_loss, dice_coef_multiclass, mIU_fp_penalty_loss, focal_loss, dice_fp_penalty_loss, dice_fpfn_weighted_loss, dice_iou_loss
 from keras_contrib.losses import jaccard_distance
 
 learning_rate = 1e-4
@@ -114,7 +139,7 @@ optimizer = optimizers.Adam(lr = learning_rate)
 #losses = ['categorical_crossentropy']
 #metrics = ['categorical_accuracy']
 
-losses = [mIU_fp_penalty_loss]
+losses = [dice_iou_loss]
 metrics = [dice_coef_multiclass]
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -123,8 +148,6 @@ model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 # In[]:
 from tqdm import tqdm
-
-vis = False
 
 meaniu = 0
 freqweightediu = 0
