@@ -11,9 +11,9 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # In[]
-log = False
+log = True
 aug_mode = 0
-verbose = 1
+verbose = 2
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -149,7 +149,7 @@ def custom_generator(images_path, labels_path, preprocessing_fn = None, aug_mode
             if validation or aug_mode == 0:
                 x_batch[b] = x
                 y_batch[b] = y
-            elif aug_mode == 1 or aug_mode == 2:
+            elif aug_mode == 1:
                 x2 = augment(x)
                 x_batch[2*b] = x
                 x_batch[2*b+1] = x2
@@ -177,8 +177,8 @@ def custom_generator(images_path, labels_path, preprocessing_fn = None, aug_mode
         y_batch = to_categorical(y_batch, num_classes=num_classes)
         y_batch = y_batch.astype('int64')
         
-        print(x_batch.shape)
-        print(y_batch.shape)
+#        print(x_batch.shape)
+#        print(y_batch.shape)
     
         yield (x_batch, y_batch)
            
@@ -229,23 +229,25 @@ config = {
     'token': '720029625:AAGG5aS46wOliEIs0HmUFgg8koN_ScI3AIY',   # paste your bot token
     'telegram_id': 218977821,                                   # paste your telegram_id
 }
+
 tg_callback = TelegramCallback(config)
 
-tensor_board = callbacks.TensorBoard(log_dir='./tblogs/segmentation_pspnet_seresnet101')
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='loss', factor = 0.5, patience = 5, verbose = 1, min_lr = 1e-8)
 early_stopper = callbacks.EarlyStopping(monitor='loss', patience = 10, verbose = 1)
-clbacks = [reduce_lr, early_stopper, tensor_board, tg_callback]
+clbacks = [reduce_lr, early_stopper, tg_callback]
 
 if log:
     csv_logger = callbacks.CSVLogger('logs/segmentation_pspnet_seresnet101/{}.log'.format(loggername))
     model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation_pspnet_seresnet101/{}.hdf5'.format(loggername), monitor = 'loss', verbose = 1, save_best_only = True, save_weights_only = True)
+    tensor_board = callbacks.TensorBoard(log_dir='./tblogs/segmentation_pspnet_seresnet101')
     clbacks.append(csv_logger)
     clbacks.append(model_checkpoint)
+    clbacks.append(tensor_board)
 
 print("Callbacks: {}\n".format(clbacks))
 
 # In[ ]:
-steps_per_epoch = len(images)//batch_size
+steps_per_epoch = len(labels)//batch_size
 epochs = 1000
 
 print("Steps per epoch: {}".format(steps_per_epoch))
