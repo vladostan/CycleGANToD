@@ -50,10 +50,27 @@ aug = Blur(blur_limit=5, p=1.)
 vis(aug)
 
 # In[]
-from imgaug import augmenters as iaa
+import imgaug.augmenters as iaa
 
-seq = iaa.Sequential([iaa.Snowflakes()])
+def random_float(low, high):
+    return np.random.random()*(high-low) + low
 
+mul = random_float(0.1, 0.5)
+add = np.random.randint(-100,-50)
+gamma = random_float(2,3)
+
+seq = iaa.Multiply(mul = mul)
+seq = iaa.Add(value = add)
+seq = iaa.GammaContrast(gamma=gamma)
+
+seq = iaa.OneOf([
+        iaa.Multiply(mul = mul),
+        iaa.Add(value = add),
+        iaa.GammaContrast(gamma=gamma)
+        ])
+    
+image_aug = seq.augment_image(image)
+plt.imshow(image_aug)
 
 # In[]
 
