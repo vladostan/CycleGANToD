@@ -1,2 +1,5 @@
-results/CCE/vis/*
-results/dice/vis/*
+results/*
+weights/*
+checkpoints/*
+datasets/*
+tblogs/*

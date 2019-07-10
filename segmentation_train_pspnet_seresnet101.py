@@ -8,7 +8,7 @@ import datetime
 
 # In[]
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
 log = True
@@ -210,39 +210,53 @@ model.summary()
 from keras import optimizers
 from segmentation_models.losses import dice_loss, cce_dice_loss
 from segmentation_models.metrics import dice_score
+from losses import dice_coef_multiclass_loss
 
-learning_rate = 1e-4
-optimizer = optimizers.Adam(lr = learning_rate)
+learning_rate = 1e-3
+optimizer = optimizers.Adam()
 
-losses = [dice_loss]
-metrics = [dice_score]
+#losses = [dice_loss]
+#metrics = [dice_score]
+
+losses = [dice_coef_multiclass_loss]
+metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
 
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
+# In[]:
+import tensorflow as tf
+from keras import backend as K
+
+def get_tf_session():
+    gpu_options = tf.GPUOptions(allow_growth=True)
+    return tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
+
+#K.set_session(get_tf_session())
+
 # In[ ]:
 from keras import callbacks
-from callbacks import TelegramCallback
+#from callbacks import TelegramCallback
 
 config = {
     'token': '720029625:AAGG5aS46wOliEIs0HmUFgg8koN_ScI3AIY',   # paste your bot token
     'telegram_id': 218977821,                                   # paste your telegram_id
 }
 
-tg_callback = TelegramCallback(config)
-
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='loss', factor = 0.5, patience = 5, verbose = 1, min_lr = 1e-8)
 early_stopper = callbacks.EarlyStopping(monitor='loss', patience = 10, verbose = 1)
-clbacks = [reduce_lr, early_stopper, tg_callback]
+clbacks = [reduce_lr, early_stopper]
 
 if log:
     csv_logger = callbacks.CSVLogger('logs/segmentation_pspnet_seresnet101/{}.log'.format(loggername))
     model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation_pspnet_seresnet101/{}.hdf5'.format(loggername), monitor = 'loss', verbose = 1, save_best_only = True, save_weights_only = True)
     tensor_board = callbacks.TensorBoard(log_dir='./tblogs/segmentation_pspnet_seresnet101')
+#    tg_callback = TelegramCallback(config)
     clbacks.append(csv_logger)
     clbacks.append(model_checkpoint)
     clbacks.append(tensor_board)
+#    clbacks.append(tg_callback)
 
 print("Callbacks: {}\n".format(clbacks))
 

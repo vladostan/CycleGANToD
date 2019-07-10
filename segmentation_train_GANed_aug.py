@@ -8,11 +8,11 @@ import datetime
 
 # In[]
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # In[]
-log = False
-verbose = 1
+log = True
+verbose = 2
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -159,14 +159,14 @@ def custom_generator(images_path, labels_path, preprocessing_fn = None, doaug = 
                 x2 = get_image(images_path[2*i])
                 x3 = augment(x)
                 x4 = augment(x2)
-                x_batch[2*b] = x
-                x_batch[2*b+1] = x2
-                x_batch[2*b+2] = x3
-                x_batch[2*b+3] = x4
-                y_batch[2*b] = y
-                y_batch[2*b+1] = y
-                y_batch[2*b+2] = y
-                y_batch[2*b+3] = y
+                x_batch[4*b] = x
+                x_batch[4*b+1] = x2
+                x_batch[4*b+2] = x3
+                x_batch[4*b+3] = x4
+                y_batch[4*b] = y
+                y_batch[4*b+1] = y
+                y_batch[4*b+2] = y
+                y_batch[4*b+3] = y
                 
             i += 1
             
@@ -211,9 +211,7 @@ from keras_contrib.losses import jaccard_distance
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
-#losses = ['categorical_crossentropy']
-
-losses = [dice_iou_conditional_loss]
+losses = [dice_coef_multiclass_loss]
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -222,18 +220,18 @@ model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
 # In[ ]:
 from keras import callbacks
-from callbacks import TelegramCallback
+#from callbacks import TelegramCallback
 
 config = {
     'token': '720029625:AAGG5aS46wOliEIs0HmUFgg8koN_ScI3AIY',   # paste your bot token
     'telegram_id': 218977821,                                   # paste your telegram_id
 }
-tg_callback = TelegramCallback(config)
+#tg_callback = TelegramCallback(config)
 
 tensor_board = callbacks.TensorBoard(log_dir='./tblogs')
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='loss', factor = 0.5, patience = 4, verbose = 1, min_lr = 1e-7)
 early_stopper = callbacks.EarlyStopping(monitor='loss', patience = 10, verbose = 1)
-clbacks = [reduce_lr, early_stopper, tensor_board, tg_callback]
+clbacks = [reduce_lr, early_stopper, tensor_board]
 
 if log:
     csv_logger = callbacks.CSVLogger('logs/segmentation/{}.log'.format(loggername))

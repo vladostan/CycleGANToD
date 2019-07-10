@@ -1,1 +1,0 @@
-python3 segmentation_train_GANed.py

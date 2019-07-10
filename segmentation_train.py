@@ -12,7 +12,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # In[]
-log = False
+log = True
 
 # Get the date and time
 now = datetime.datetime.now()
@@ -256,15 +256,14 @@ model.summary()
 # In[ ]:
 from keras import optimizers
 from metrics import mean_IU, frequency_weighted_IU, mean_accuracy, pixel_accuracy, mIU_fp_penalty
-from losses import dice_coef_loss, iou_loss_score
+from losses import dice_coef_multiclass_loss
 
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
 #losses = ['categorical_crossentropy']
 
-losses = [iou_loss_score]
-
+losses = [dice_coef_multiclass_loss]
 metrics = ['categorical_accuracy']
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -273,7 +272,6 @@ print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimiz
 #              loss = losses, metrics = metrics)
 #model.compile(optimizer = Adam(lr=learning_rate, epsilon=1e-8, decay=1e-6), loss = losses, metrics = metrics)
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
-
 
 # In[ ]:
 from keras import callbacks
@@ -295,7 +293,7 @@ print("Callbacks: {}\n".format(clbacks))
 # In[ ]:
 steps_per_epoch = len(images_train)//batch_size
 epochs = 1000
-verbose = 1
+verbose = 2
 
 print("Steps per epoch: {}".format(steps_per_epoch))
 

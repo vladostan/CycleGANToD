@@ -10,7 +10,7 @@ import PIL.Image as Image
 
 # In[]
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # READ IMAGES AND MASKS
 # In[2]:
@@ -22,8 +22,8 @@ vis = False
 imgs_dir = "images"
 visdir = 'train/'
 
-#imgs_dir = "trainB"
-#visdir = 'test/'
+imgs_dir = "trainB"
+visdir = 'test/'
 
 SOURCE_IMAGES = [os.path.join(PATH, "day2night_inno/", imgs_dir)]
 
@@ -82,8 +82,8 @@ model = Linknet(backbone_name=backbone, input_shape=(256, 640, 3), classes=3, ac
 #weights_path = "weights/segmentation/CCE/2019-03-26 08-51-43.hdf5" # for 447 day images of innopolis in 2018 albumentated training 
 #visdir+='alb/'
 
-weights_path = "weights/segmentation/CCE/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
-visdir+='mix/'
+#weights_path = "weights/segmentation/CCE/2019-03-26 10-04-18.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
+#visdir+='mix/'
 
 ################### DICE
 #weights_path = "weights/segmentation/dice/2019-03-27 07-55-59.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
@@ -121,6 +121,76 @@ visdir+='mix/'
 #weights_path = "weights/segmentation/2019-04-01 11-46-54.hdf5" # for 447 day images of innopolis in 2018 albumentated + GANed training 
 #visdir+='mix/'
 
+
+
+
+###################
+###################
+###################
+
+
+
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE0 1
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-22 09-10-59.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE0 2
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-24 12-36-48.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE0 3
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-24 14-33-14.hdf5"
+
+
+
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE1 1
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-21 15-06-19.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE1 2
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-24 07-49-16.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE1 3
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-24 12-35-18.hdf5"
+
+
+
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE2 1
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-21 15-06-07.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE2 2
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 13-57-52.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE2 3
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 13-58-59.hdf5"
+
+
+
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE3 1
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-21 13-47-28.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE3 2
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 08-22-50.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE3 3
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-24 07-48-43.hdf5"
+
+
+
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE4 1
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 08-23-52.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE4 2
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 09-59-55.hdf5"
+
+################### LINKNET RESNET18 DICE LOSS from segmentation_models AUGMODE4 3
+#weights_path = "weights/segmentation_linknet_resnet18/2019-05-23 10-00-46.hdf5"
+
+
+
+
 model.load_weights(weights_path)
 
 print("Model summary:")
@@ -133,13 +203,13 @@ from metrics import tptnfpfn, mean_IU, frequency_weighted_IU, mean_accuracy, pix
 from losses import dice_coef_multiclass_loss, dice_coef_multiclass, mIU_fp_penalty_loss, focal_loss, dice_fp_penalty_loss, dice_fpfn_weighted_loss, dice_iou_loss
 from keras_contrib.losses import jaccard_distance
 
+from segmentation_models.losses import dice_loss, cce_dice_loss
+from segmentation_models.metrics import dice_score
+
 learning_rate = 1e-4
 optimizer = optimizers.Adam(lr = learning_rate)
 
-#losses = ['categorical_crossentropy']
-#metrics = ['categorical_accuracy']
-
-losses = [dice_iou_loss]
+losses = [dice_coef_multiclass_loss]
 metrics = [dice_coef_multiclass]
 
 print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimizer, learning_rate, losses, metrics))
@@ -195,6 +265,7 @@ for i in tqdm(range(dlina)):
     mIU_penalized += mIU_fp_penalty(y_pred, y_true)/dlina
     
     y_true = to_categorical(y_true, num_classes=num_classes)
+    
     dice += model.evaluate(x=x, y=np.expand_dims(y_true,axis=0))[-1]/dlina
     
 print("mean_IU: {}".format(meaniu))
