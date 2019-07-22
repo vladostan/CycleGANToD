@@ -1,1 +1,1 @@
-python3 test.py --dataroot ./datasets/icevision_day_and_night --name icevision_day_and_night_cyclegan --model cycle_gan
+python3 test.py --dataroot ./datasets/icevision_day_and_night/testA --name icevision_day_and_night_cyclegan --model test --no_dropout
