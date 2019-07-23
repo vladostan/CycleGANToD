@@ -1,7 +1,7 @@
 Using TensorFlow backend.
 /home/vostankovich/.local/lib/python3.6/site-packages/classification_models/resnext/__init__.py:4: UserWarning: Current ResNext models are deprecated, use keras.applications ResNeXt models
   warnings.warn('Current ResNext models are deprecated, '
-Date and time: 2019-07-22 09-16-11
+Date and time: 2019-07-22 19-43-34
 
 Total day images count: 40133
 Total night images count: 25949
@@ -27,23 +27,21 @@ DOING CYCLEGAN AUGMENTATION
 WARNING:tensorflow:From /home/vostankovich/.local/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Colocations handled automatically by placer.
-2019-07-22 09:16:12.164455: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
-2019-07-22 09:16:12.623643: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x1bda170 executing computations on platform CUDA. Devices:
-2019-07-22 09:16:12.623677: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
-2019-07-22 09:16:12.646638: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2195310000 Hz
-2019-07-22 09:16:12.652891: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x162c6b0 executing computations on platform Host. Devices:
-2019-07-22 09:16:12.652943: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
-2019-07-22 09:16:12.653522: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+2019-07-22 19:43:34.581621: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-22 19:43:35.056698: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x28b0160 executing computations on platform CUDA. Devices:
+2019-07-22 19:43:35.056734: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-22 19:43:35.078527: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2195310000 Hz
+2019-07-22 19:43:35.084462: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x2c27930 executing computations on platform Host. Devices:
+2019-07-22 19:43:35.084517: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-22 19:43:35.084969: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
 name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
 pciBusID: 0000:0a:00.0
 totalMemory: 15.75GiB freeMemory: 15.34GiB
-2019-07-22 09:16:12.653544: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
-2019-07-22 09:16:12.655533: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
-2019-07-22 09:16:12.655549: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
-2019-07-22 09:16:12.655555: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
-2019-07-22 09:16:12.655940: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14926 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:0a:00.0, compute capability: 7.0)
-
-
+2019-07-22 19:43:35.084988: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-22 19:43:35.086842: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-22 19:43:35.086858: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-22 19:43:35.086864: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-22 19:43:35.087148: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14926 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:0a:00.0, compute capability: 7.0)
 Model summary:
 __________________________________________________________________________________________________
 Layer (type)                    Output Shape         Param #     Connected to                     
@@ -6603,9 +6601,9 @@ Total params: 56,059,619
 Trainable params: 55,919,779
 Non-trainable params: 139,840
 __________________________________________________________________________________________________
-Optimizer: <keras.optimizers.Adam object at 0x7fed02b212b0>, learning rate: 0.0001, loss: [<function dice_coef_multiclass_loss at 0x7fed53668d90>], metrics: ['categorical_accuracy']
+Optimizer: <keras.optimizers.Adam object at 0x7f16b359c5c0>, learning rate: 0.0001, loss: [<function dice_coef_multiclass_loss at 0x7f1760117d90>], metrics: ['categorical_accuracy']
 
-Callbacks: [<keras.callbacks.ReduceLROnPlateau object at 0x7fed02b68898>, <keras.callbacks.EarlyStopping object at 0x7fed02b21c88>, <keras.callbacks.CSVLogger object at 0x7fed02af3358>, <keras.callbacks.ModelCheckpoint object at 0x7fed02af3780>, <keras.callbacks.TensorBoard object at 0x7fed02af39e8>]
+Callbacks: [<keras.callbacks.ReduceLROnPlateau object at 0x7f16b35e4898>, <keras.callbacks.EarlyStopping object at 0x7f16b3561b00>, <keras.callbacks.CSVLogger object at 0x7f16b356e390>, <keras.callbacks.ModelCheckpoint object at 0x7f16b356e7b8>, <keras.callbacks.TensorBoard object at 0x7f16b356ea20>]
 
 Steps per epoch: 13377
 Starting training...
@@ -6617,11 +6615,39 @@ WARNING:tensorflow:From /home/vostankovich/.local/lib/python3.6/site-packages/te
 Instructions for updating:
 Deprecated in favor of operator or tf.math.divide.
 Epoch 1/1000
- - 10953s - loss: 0.2057 - categorical_accuracy: 0.9452 - val_loss: 0.1583 - val_categorical_accuracy: 0.9528
+ - 11076s - loss: 0.2021 - categorical_accuracy: 0.9464 - val_loss: 0.1684 - val_categorical_accuracy: 0.9490
 
-Epoch 00001: val_loss improved from inf to 0.15832, saving model to weights/segmentation_bdd_val_night/2019-07-22 09-16-11.hdf5
+Epoch 00001: val_loss improved from inf to 0.16836, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
 Epoch 2/1000
- - 10983s - loss: 0.1633 - categorical_accuracy: 0.9575 - val_loss: 0.1533 - val_categorical_accuracy: 0.9541
+ - 10931s - loss: 0.1609 - categorical_accuracy: 0.9580 - val_loss: 0.1497 - val_categorical_accuracy: 0.9552
 
-Epoch 00002: val_loss improved from 0.15832 to 0.15330, saving model to weights/segmentation_bdd_val_night/2019-07-22 09-16-11.hdf5
+Epoch 00002: val_loss improved from 0.16836 to 0.14968, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
 Epoch 3/1000
+ - 10872s - loss: 0.1487 - categorical_accuracy: 0.9610 - val_loss: 0.1444 - val_categorical_accuracy: 0.9574
+
+Epoch 00003: val_loss improved from 0.14968 to 0.14438, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
+Epoch 4/1000
+ - 10979s - loss: 0.1397 - categorical_accuracy: 0.9633 - val_loss: 0.1463 - val_categorical_accuracy: 0.9562
+
+Epoch 00004: val_loss did not improve from 0.14438
+Epoch 5/1000
+ - 11049s - loss: 0.1339 - categorical_accuracy: 0.9648 - val_loss: 0.1488 - val_categorical_accuracy: 0.9556
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
+
+Epoch 00005: val_loss did not improve from 0.14438
+Epoch 6/1000
+ - 11114s - loss: 0.1158 - categorical_accuracy: 0.9691 - val_loss: 0.1373 - val_categorical_accuracy: 0.9589
+
+Epoch 00006: val_loss improved from 0.14438 to 0.13732, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
+Epoch 7/1000
+ - 11487s - loss: 0.1077 - categorical_accuracy: 0.9711 - val_loss: 0.1484 - val_categorical_accuracy: 0.9536
+
+Epoch 00007: val_loss did not improve from 0.13732
+Epoch 8/1000
+ - 11062s - loss: 0.1024 - categorical_accuracy: 0.9724 - val_loss: 0.1401 - val_categorical_accuracy: 0.9581
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 2.499999936844688e-05.
+
+Epoch 00008: val_loss did not improve from 0.13732
+Epoch 9/1000
