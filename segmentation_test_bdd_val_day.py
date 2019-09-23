@@ -11,12 +11,19 @@ from keras import optimizers
 from losses import dice_coef_multiclass_loss, dice_coef_multiclass
 from metrics_for_paper import mAccuracy, mPrecision, mRecall, mIU, mF1
 from segmentation_models.backbones import get_preprocessing
-from segmentation_models import PSPNet
+from segmentation_models import PSPNet, Unet
 from tqdm import tqdm
 
 # In[]
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.1
+set_session(tf.Session(config=config))
 
 # READ IMAGES AND MASKS
 # In[2]:
@@ -36,17 +43,18 @@ print("Total night images count: {}".format(len(night_images)))
 print("Total night labels count: {}\n".format(len(night_labels)))
 
 # In[]
-input_shape = (336, 624, 3)
+#input_shape = (336, 624, 3)
+input_shape = (384, 640, 3)
 num_classes = 3
 vis = True
-numvis = 5000
+numvis = 1000
 mode = 'night'
 
 def get_image(path):
     img = Image.open(path)
-    img = img.resize((input_shape[1], input_shape[0]))
+    img = img.resize((input_shape[1],input_shape[0]))
     img = np.array(img) 
-    return img    
+    return img       
 
 if mode == 'day':
     images = day_images
@@ -58,29 +66,42 @@ elif mode == 'night':
 # In[ ]:
 backbone = 'seresnext101'
 preprocessing_fn = get_preprocessing(backbone)
-model = PSPNet(backbone_name=backbone, input_shape=input_shape, classes=num_classes, activation='softmax')
+#model = PSPNet(backbone_name=backbone, input_shape=input_shape, classes=num_classes, activation='softmax')
+model = Unet(backbone_name=backbone, input_shape=input_shape, classes=num_classes, activation='softmax')
 
 weights = []
 
 ################### PSPNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE0
-weights_path = "weights/segmentation_bdd/2019-06-29 14-20-30.hdf5"
-weights.append(weights_path)
+#weights_path = "weights/segmentation_bdd/2019-06-29 14-20-30.hdf5"
+#weights.append(weights_path)
 
 ################### PSPNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE1
-weights_path = "weights/segmentation_bdd/2019-07-07 17-33-16.hdf5"
-weights.append(weights_path)
+#weights_path = "weights/segmentation_bdd/2019-07-07 17-33-16.hdf5"
+#weights.append(weights_path)
 
 ################### PSPNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE2
-weights_path = "weights/segmentation_bdd/2019-07-07 17-30-57.hdf5"
-weights.append(weights_path)
+#weights_path = "weights/segmentation_bdd/2019-07-07 17-30-57.hdf5"
+#weights.append(weights_path)
 
 ################### PSPNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE3
-weights_path = "weights/segmentation_bdd/2019-07-08 18-54-52.hdf5"
-weights.append(weights_path)
+#weights_path = "weights/segmentation_bdd/2019-07-08 18-54-52.hdf5"
+#weights.append(weights_path)
 
 ################### PSPNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE4
-weights_path = "weights/segmentation_bdd/2019-07-08 18-57-09.hdf5"
+#weights_path = "weights/segmentation_bdd/2019-07-08 18-57-09.hdf5"
+#weights.append(weights_path)
+
+################### UNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE0
+weights_path = "weights/segmentation_bdd_val_day_unet/2019-09-20 15-59-09.hdf5"
 weights.append(weights_path)
+
+################### UNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE1
+#weights_path = "weights/segmentation_bdd_val_day_unet/2019-09-20 15-59-24.hdf5"
+#weights.append(weights_path)
+
+################### UNET SERESNEXT101 DICE LOSS from segmentation_models AUGMODE2
+#weights_path = "weights/segmentation_bdd_val_day_unet/2019-09-20 17-11-54.hdf5"
+#weights.append(weights_path)
 
 # In[ ]:
 learning_rate = 1e-4
@@ -133,7 +154,7 @@ for w in tqdm(weights):
             y_true_vis *= 255//2
             overlay_true = cv2.addWeighted(x_vis,1,cv2.applyColorMap(y_true_vis,cv2.COLORMAP_OCEAN),1,0)
             tosave = Image.fromarray(np.vstack((overlay_true, overlay_pred)))
-            tosave.save("results/segmentation_bdd/vis/{}_{}_{}".format(mode, w.split('/')[-1][:-5], images[i].split('/')[-1]))
+            tosave.save("results/segmentation_bdd_val_day_unet/vis/augmode0/{}_{}_{}".format(mode, w.split('/')[-1][:-5], images[i].split('/')[-1]))
         
         mAccuracy_ += mAccuracy(y_pred, y_true)/dlina
         mPrecision_ += mPrecision(y_pred, y_true)/dlina
@@ -147,5 +168,5 @@ for w in tqdm(weights):
     print("iu: {}".format(mIU_))
     print("f1: {}".format(mF1_))
     
-    with open('results/segmentation_bdd/{}_{}.pkl'.format(mode, w.split('/')[-1][:-5]), 'wb') as f:
+    with open('results/segmentation_bdd_val_day_unet/{}_{}.pkl'.format(mode, w.split('/')[-1][:-5]), 'wb') as f:
         pickle.dump([mode, mAccuracy_, mPrecision_, mRecall_, mIU_, mF1_], f)

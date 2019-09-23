@@ -36,7 +36,7 @@ from albumentations import (
 # In[]: Parameters
 log = False
 verbose = 2
-aug_mode = 4
+aug_mode = 0
 
 resume_from = False
 #weights_path = "weights/segmentation_bdd/.hdf5"
@@ -59,7 +59,7 @@ loggername = loggername.replace(":","-")
 class Logger(object):
     def __init__(self):
         self.terminal = sys.stdout
-        self.log = open('logs/segmentation_bdd/{}.txt'.format(loggername), 'w')
+        self.log = open('logs/segmentation_bdd_val_day/{}.txt'.format(loggername), 'w')
 
     def write(self, message):
         self.terminal.write(message)

@@ -1,26 +1,22 @@
-Date and time: 2019-07-22 19-43-34
+Date and time: 2019-09-20 17-11-54
 
-Total day images count: 40133
-Total night images count: 25949
-Total day labels count: 40133
-Total night labels count: 25949
+Total images count: 40133
+Total labels count: 40133
 
-Day images dtype: (384, 640, 3)
-Night images dtype: (384, 640, 3)
+Images dtype: (384, 640, 3)
 CycleGAN images dtype: (384, 640, 3)
-Day labels dtype: (384, 640)
-Night labels dtype: (384, 640)
+Labels dtype: (384, 640)
 
-Training images count: 40133
-Training labels count: 40133
+Train:test split = 0.8:0.2
 
-Validation images count: 5189
-Validation labels count: 5189
+Training images count: 32106
+Training labels count: 32106
 
-Testing images count: 20760
-Testing labels count: 20760
+Testing images count: 8027
+Testing labels count: 8027
 
 DOING CYCLEGAN AUGMENTATION
+Loading weights: weights/segmentation_bdd_val_night/2019-07-20 21-52-43.hdf5
 Model summary:
 __________________________________________________________________________________________________
 Layer (type)                    Output Shape         Param #     Connected to                     
@@ -6580,79 +6576,43 @@ Total params: 56,059,619
 Trainable params: 55,919,779
 Non-trainable params: 139,840
 __________________________________________________________________________________________________
-Optimizer: <keras.optimizers.Adam object at 0x7f16b359c5c0>, learning rate: 0.0001, loss: [<function dice_coef_multiclass_loss at 0x7f1760117d90>], metrics: ['categorical_accuracy']
+Optimizer: <keras.optimizers.Adam object at 0x7fae17517e80>, learning rate: 0.0001, loss: [<function dice_coef_multiclass_loss at 0x7faebe886158>], metrics: ['categorical_accuracy']
 
-Callbacks: [<keras.callbacks.ReduceLROnPlateau object at 0x7f16b35e4898>, <keras.callbacks.EarlyStopping object at 0x7f16b3561b00>, <keras.callbacks.CSVLogger object at 0x7f16b356e390>, <keras.callbacks.ModelCheckpoint object at 0x7f16b356e7b8>, <keras.callbacks.TensorBoard object at 0x7f16b356ea20>]
+Callbacks: [<keras.callbacks.ReduceLROnPlateau object at 0x7fae17c78518>, <keras.callbacks.EarlyStopping object at 0x7fae17377940>, <keras.callbacks.CSVLogger object at 0x7fae17377630>, <keras.callbacks.ModelCheckpoint object at 0x7fae17377780>, <keras.callbacks.TensorBoard object at 0x7fae173776d8>]
 
-Steps per epoch: 13377
+Steps per epoch: 16053
 Starting training...
 
 Epoch 1/1000
- - 11076s - loss: 0.2021 - categorical_accuracy: 0.9464 - val_loss: 0.1684 - val_categorical_accuracy: 0.9490
+ - 11347s - loss: 0.1415 - categorical_accuracy: 0.9635 - val_loss: 0.1230 - val_categorical_accuracy: 0.9668
 
-Epoch 00001: val_loss improved from inf to 0.16836, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
+Epoch 00001: val_loss improved from inf to 0.12295, saving model to weights/segmentation_bdd_val_day_unet/2019-09-20 17-11-54.hdf5
 Epoch 2/1000
- - 10931s - loss: 0.1609 - categorical_accuracy: 0.9580 - val_loss: 0.1497 - val_categorical_accuracy: 0.9552
+ - 12257s - loss: 0.1380 - categorical_accuracy: 0.9644 - val_loss: 0.1197 - val_categorical_accuracy: 0.9676
 
-Epoch 00002: val_loss improved from 0.16836 to 0.14968, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
+Epoch 00002: val_loss improved from 0.12295 to 0.11973, saving model to weights/segmentation_bdd_val_day_unet/2019-09-20 17-11-54.hdf5
 Epoch 3/1000
- - 10872s - loss: 0.1487 - categorical_accuracy: 0.9610 - val_loss: 0.1444 - val_categorical_accuracy: 0.9574
+ - 11196s - loss: 0.1321 - categorical_accuracy: 0.9658 - val_loss: 0.1351 - val_categorical_accuracy: 0.9636
 
-Epoch 00003: val_loss improved from 0.14968 to 0.14438, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
+Epoch 00003: val_loss did not improve from 0.11973
 Epoch 4/1000
- - 10979s - loss: 0.1397 - categorical_accuracy: 0.9633 - val_loss: 0.1463 - val_categorical_accuracy: 0.9562
+ - 11194s - loss: 0.1258 - categorical_accuracy: 0.9672 - val_loss: 0.1210 - val_categorical_accuracy: 0.9670
 
-Epoch 00004: val_loss did not improve from 0.14438
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
+
+Epoch 00004: val_loss did not improve from 0.11973
 Epoch 5/1000
- - 11049s - loss: 0.1339 - categorical_accuracy: 0.9648 - val_loss: 0.1488 - val_categorical_accuracy: 0.9556
+ - 11310s - loss: 0.1049 - categorical_accuracy: 0.9722 - val_loss: 0.1250 - val_categorical_accuracy: 0.9668
 
-Epoch 00005: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
-
-Epoch 00005: val_loss did not improve from 0.14438
+Epoch 00005: val_loss did not improve from 0.11973
 Epoch 6/1000
- - 11114s - loss: 0.1158 - categorical_accuracy: 0.9691 - val_loss: 0.1373 - val_categorical_accuracy: 0.9589
+ - 12290s - loss: 0.0950 - categorical_accuracy: 0.9745 - val_loss: 0.1265 - val_categorical_accuracy: 0.9658
 
-Epoch 00006: val_loss improved from 0.14438 to 0.13732, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
-Epoch 7/1000
- - 11487s - loss: 0.1077 - categorical_accuracy: 0.9711 - val_loss: 0.1484 - val_categorical_accuracy: 0.9536
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 2.499999936844688e-05.
 
-Epoch 00007: val_loss did not improve from 0.13732
-Epoch 8/1000
- - 11062s - loss: 0.1024 - categorical_accuracy: 0.9724 - val_loss: 0.1401 - val_categorical_accuracy: 0.9581
-
-Epoch 00008: ReduceLROnPlateau reducing learning rate to 2.499999936844688e-05.
-
-Epoch 00008: val_loss did not improve from 0.13732
-Epoch 9/1000
- - 10950s - loss: 0.0919 - categorical_accuracy: 0.9748 - val_loss: 0.1378 - val_categorical_accuracy: 0.9582
-
-Epoch 00009: val_loss did not improve from 0.13732
-Epoch 10/1000
- - 10914s - loss: 0.0858 - categorical_accuracy: 0.9763 - val_loss: 0.1359 - val_categorical_accuracy: 0.9588
-
-Epoch 00010: val_loss improved from 0.13732 to 0.13591, saving model to weights/segmentation_bdd_val_night/2019-07-22 19-43-34.hdf5
-Epoch 11/1000
- - 11168s - loss: 0.0811 - categorical_accuracy: 0.9774 - val_loss: 0.1369 - val_categorical_accuracy: 0.9586
-
-Epoch 00011: val_loss did not improve from 0.13591
-Epoch 12/1000
- - 11320s - loss: 0.0772 - categorical_accuracy: 0.9783 - val_loss: 0.1382 - val_categorical_accuracy: 0.9580
-
-Epoch 00012: ReduceLROnPlateau reducing learning rate to 1.249999968422344e-05.
-
-Epoch 00012: val_loss did not improve from 0.13591
-Epoch 13/1000
- - 11781s - loss: 0.0719 - categorical_accuracy: 0.9797 - val_loss: 0.1396 - val_categorical_accuracy: 0.9576
-
-Epoch 00013: val_loss did not improve from 0.13591
-Epoch 14/1000
- - 11375s - loss: 0.0686 - categorical_accuracy: 0.9805 - val_loss: 0.1419 - val_categorical_accuracy: 0.9570
-
-Epoch 00014: ReduceLROnPlateau reducing learning rate to 6.24999984211172e-06.
-
-Epoch 00014: val_loss did not improve from 0.13591
-Epoch 00014: early stopping
+Epoch 00006: val_loss did not improve from 0.11973
+Epoch 00006: early stopping
 Finished training
 
-Date and time: 2019-07-24 15-36-32
+Date and time: 2019-09-21 13-06-23
 

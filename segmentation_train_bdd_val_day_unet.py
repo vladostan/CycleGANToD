@@ -4,7 +4,14 @@
 import os
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.75
+set_session(tf.Session(config=config))
 
 # In[]: Imports
 import pickle
@@ -17,7 +24,7 @@ from keras.utils import to_categorical
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from segmentation_models.backbones import get_preprocessing
-from segmentation_models import PSPNet, Linknet, Unet
+from segmentation_models import Unet
 from keras import optimizers, callbacks
 from losses import dice_coef_multiclass_loss
 import imgaug.augmenters as iaa
@@ -36,15 +43,15 @@ from albumentations import (
 # In[]: Parameters
 log = True
 verbose = 2
-aug_mode = 4
+aug_mode = 2
 
-resume_from = False
-#weights_path = "weights/segmentation_bdd/.hdf5"
+resume_from = True
+weights_path = "weights/segmentation_bdd_val_night/2019-07-20 21-52-43.hdf5"
 
 batch_factor = [1,2,2,3,4]
-batch_size_init = 6
+batch_size_init = 4
 batch_size = batch_size_init//batch_factor[aug_mode]
-test_size = 0.8
+test_size = 0.2
 random_state = 1
 num_classes = 3
 input_shape = (384, 640, 3)
@@ -59,7 +66,7 @@ loggername = loggername.replace(":","-")
 class Logger(object):
     def __init__(self):
         self.terminal = sys.stdout
-        self.log = open('logs/segmentation_bdd_val_night/{}.txt'.format(loggername), 'w')
+        self.log = open('logs/segmentation_bdd_val_day_unet/{}.txt'.format(loggername), 'w')
 
     def write(self, message):
         self.terminal.write(message)
@@ -77,55 +84,49 @@ print('Date and time: {}\n'.format(loggername))
 # In[2]:
 with open('bdd_day_night_list.pkl', 'rb') as f:
     day_images = pickle.load(f)
-    night_images = pickle.load(f)
         
 day_images.sort()
-night_images.sort()
 
 cyclegan_images = ['results/day2night_bdd_cyclegan/test_latest/images/' + di.split('/')[-2] + '_' + di.split('/')[-1].split('.')[0] + '_fake_B.jpg' for di in day_images]
     
-day_labels = [di.replace("images","drivable_maps")[:-4] + "_drivable_id.png" for di in day_images]
-night_labels = [ni.replace("images","drivable_maps")[:-4] + "_drivable_id.png" for ni in night_images]
+labels = [di.replace("images","drivable_maps")[:-4] + "_drivable_id.png" for di in day_images]
     
-print("Total day images count: {}".format(len(day_images)))
-print("Total night images count: {}".format(len(night_images)))
-print("Total day labels count: {}".format(len(day_labels)))
-print("Total night labels count: {}\n".format(len(night_labels)))
+print("Total images count: {}".format(len(day_images)))
+print("Total labels count: {}\n".format(len(labels)))
 
 # In[]: Read images and labels from file
 def get_image(path):
     img = Image.open(path)
     img = img.resize((input_shape[1],input_shape[0]))
-    img = np.array(img)
-    return img
+    img = np.array(img) 
+    return img    
 
-print("Day images dtype: {}".format(get_image(day_images[0]).shape))
-print("Night images dtype: {}".format(get_image(night_images[0]).shape))
+print("Images dtype: {}".format(get_image(day_images[0]).shape))
 print("CycleGAN images dtype: {}".format(get_image(cyclegan_images[0]).shape))
-print("Day labels dtype: {}".format(get_image(day_labels[0]).shape))
-print("Night labels dtype: {}\n".format(get_image(night_labels[0]).shape))
+print("Labels dtype: {}\n".format(get_image(labels[0]).shape))
 
 # In[]: Prepare for training
-night_images_val, night_images_test, night_labels_val, night_labels_test = train_test_split(night_images, night_labels, test_size=test_size, random_state=random_state)
+print("Train:test split = {}:{}\n".format(1-test_size, test_size))
 
-print("Training images count: {}".format(len(day_images)))
-print("Training labels count: {}\n".format(len(day_labels)))
-print("Validation images count: {}".format(len(night_images_val)))
-print("Validation labels count: {}\n".format(len(night_labels_val)))
-print("Testing images count: {}".format(len(night_images_test)))
-print("Testing labels count: {}\n".format(len(night_labels_test)))
+images_train, images_test, labels_train, labels_test = train_test_split(day_images, labels, test_size=test_size, random_state=random_state)
+cyclegan_images_train, cyclegan_images_test = train_test_split(cyclegan_images, test_size=test_size, random_state=random_state)
+
+print("Training images count: {}".format(len(images_train)))
+print("Training labels count: {}\n".format(len(labels_train)))
+print("Testing images count: {}".format(len(images_test)))
+print("Testing labels count: {}\n".format(len(labels_test)))
 
 # In[]: Class weight counting
 if class_weight_counting:    
     cw = np.zeros(num_classes, dtype=np.int64)
 
-    for lt in tqdm(day_labels):
+    for lt in tqdm(labels_train):
         l = get_image(lt)
         
         for i in range(num_classes):
             cw[i] += np.count_nonzero(l==i)
         
-    if sum(cw) == len(day_labels)*input_shape[0]*input_shape[1]:
+    if sum(cw) == len(labels_train)*input_shape[0]*input_shape[1]:
         print("Class weights calculated successfully:")
         class_weights = np.median(cw/sum(cw))/(cw/sum(cw))
         for cntr,i in enumerate(class_weights):
@@ -133,7 +134,7 @@ if class_weight_counting:
     else:
         print("Class weights calculation failed")
 else:      
-    class_weights = np.array([0.14334049119360906, 1.0, 2.4432069979681237])
+    class_weights = np.array([0.1433035, 1., 2.45225861])
 
 # In[]: AUGMENTATIONS    
 def random_float(low, high):
@@ -274,15 +275,15 @@ def val_generator(images_path, labels_path, preprocessing_fn = None, batch_size 
 # In[ ]:
 preprocessing_fn = get_preprocessing(backbone)
 
-train_gen = train_generator(images_path = day_images, 
-                             labels_path = day_labels,
-                             cyclegan_images = cyclegan_images,
+train_gen = train_generator(images_path = images_train, 
+                             labels_path = labels_train,
+                             cyclegan_images = cyclegan_images_train,
                              preprocessing_fn = preprocessing_fn, 
                              aug_mode = aug_mode,
                              batch_size = batch_size)
 
-val_gen = val_generator(images_path = night_images_val, 
-                         labels_path = night_labels_val,
+val_gen = val_generator(images_path = images_test, 
+                         labels_path = labels_test,
                          preprocessing_fn = preprocessing_fn,
                          batch_size = batch_size_init)
 
@@ -308,25 +309,15 @@ print("Optimizer: {}, learning rate: {}, loss: {}, metrics: {}\n".format(optimiz
 
 model.compile(optimizer = optimizer, loss = losses, metrics = metrics)
 
-# In[]:
-import tensorflow as tf
-from keras import backend as K
-
-def get_tf_session():
-    gpu_options = tf.GPUOptions(allow_growth=True)
-    return tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
-
-#K.set_session(get_tf_session())
-
 # In[ ]:
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor = 0.5, patience = 2, verbose = 1, min_lr = 1e-8)
 early_stopper = callbacks.EarlyStopping(monitor='val_loss', patience = 4, verbose = 1)
 clbacks = [reduce_lr, early_stopper]
 
 if log:
-    csv_logger = callbacks.CSVLogger('logs/segmentation_bdd_val_night/{}.log'.format(loggername))
-    model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation_bdd_val_night/{}.hdf5'.format(loggername), monitor = 'val_loss', verbose = 1, save_best_only = True, save_weights_only = True)
-    tensor_board = callbacks.TensorBoard(log_dir='./tblogs/segmentation_bdd_val_night')
+    csv_logger = callbacks.CSVLogger('logs/segmentation_bdd_val_day_unet/{}.log'.format(loggername))
+    model_checkpoint = callbacks.ModelCheckpoint('weights/segmentation_bdd_val_day_unet/{}.hdf5'.format(loggername), monitor = 'val_loss', verbose = 1, save_best_only = True, save_weights_only = True)
+    tensor_board = callbacks.TensorBoard(log_dir='./tblogs/segmentation_bdd_val_day_unet')
     clbacks.append(csv_logger)
     clbacks.append(model_checkpoint)
     clbacks.append(tensor_board)
@@ -334,8 +325,8 @@ if log:
 print("Callbacks: {}\n".format(clbacks))
 
 # In[ ]:
-steps_per_epoch = len(day_labels)//batch_size
-validation_steps = len(night_labels_val)//batch_size
+steps_per_epoch = len(labels_train)//batch_size
+validation_steps = len(labels_test)//batch_size
 epochs = 1000
 
 print("Steps per epoch: {}".format(steps_per_epoch))
